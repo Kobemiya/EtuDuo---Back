@@ -3,7 +3,10 @@ class TasksController < ApplicationController
     params.require(:task).permit(:title, :description, :done, :author, :start, :end)
   end
 
+  before_action :authorize!
+
   public
+
   def create
     @todo = Task.new(get_params)
     if @todo.save
@@ -32,7 +35,7 @@ class TasksController < ApplicationController
   def update
     @todo = Task.find(params[:id])
 
-    if !@todo.update(get_params)
+    if @todo.update(get_params)
       render json: @todo
     else
       render :new, status: :unprocessable_entity
