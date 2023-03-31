@@ -1,3 +1,5 @@
+require 'json_web_token'
+
 class ApplicationController < ActionController::API
   public
 
@@ -5,7 +7,6 @@ class ApplicationController < ActionController::API
     valid, result = verify(raw_token(request.headers))
     head :unauthorized unless valid
     @token ||= result
-    print(@token)
   end
 
   def check_permissions(token, permission)

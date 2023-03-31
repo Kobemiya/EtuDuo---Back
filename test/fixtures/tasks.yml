@@ -1,0 +1,19 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  id: 
+  author: 
+  title: MyString
+  description: MyString
+  done: false
+  start: 2023-03-28 12:07:40
+  end: 2023-03-28 12:07:40
+
+two:
+  id: 
+  author: 
+  title: MyString
+  description: MyString
+  done: false
+  start: 2023-03-28 12:07:40
+  end: 2023-03-28 12:07:40
