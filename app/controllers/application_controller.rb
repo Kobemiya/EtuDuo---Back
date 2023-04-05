@@ -9,12 +9,20 @@ class ApplicationController < ActionController::API
     @token ||= result
   end
 
+  def identify!
+    valid, result = verify(raw_token(request.headers))
+    head :unauthorized unless valid
+    @user = User.find(result['sub']) if valid
+    @token ||= result
+  rescue ActiveRecord::UnknownPrimaryKey => e
+    head :conflict
+  end
+
   def check_permissions(token, permission)
     permissions = token['scope'] || []
     permissions = permissions.split if permissions.is_a? String
     head :forbidden unless permissions.include?(permission)
   end
-
 
   private
 
