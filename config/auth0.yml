@@ -1,7 +1,3 @@
 development:
   issuerUri: dev-etuduo.eu.auth0.com
   audience: https://etuduo-backend/
-
-production:
-  issuerUri: dev-etuduo.eu.auth0.com
-  audience: https://etuduo-backend/
