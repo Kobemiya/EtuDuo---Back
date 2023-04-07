@@ -1,42 +1,48 @@
 class TasksController < ApplicationController
+  private
   def get_params
-    params.require(:task).permit(:title, :description, :done, :author, :start, :end)
+    params.require(:task).permit(:title, :description, :done, :start, :end)
   end
 
-  before_action :authorize!
+  def verify_access
+    head :forbidden unless @user.tasks.where(id: params[:id]).any?
+  end
+
+  before_action :identify!
+  before_action :verify_access, except: %i[create index]
 
   public
 
   def create
-    @todo = Task.new(get_params)
-    if @todo.save
-      render json: @todo
+    @task = Task.new(get_params)
+    @task.author_id = @user.auth0Id
+    if @task.save
+      render json: @task
     else
       render :new, status: :unprocessable_entity
     end
   end
 
   def index
-    @todos = Task.all
-    render json: @todos
+    @tasks = Task.where(author_id: @user.auth0Id) || []
+    render json: @tasks
   end
 
   def show
-    @todo = Task.find(params[:id])
-    render json: @todo
+    @task = Task.find(params[:id])
+    render json: @task
   end
 
   def destroy
-    @todo = Task.find(params[:id])
-    @todo.destroy
-    render json: @todo
+    @task = Task.find(params[:id])
+    @task.destroy
+    render json: @task
   end
 
   def update
-    @todo = Task.find(params[:id])
-
-    if @todo.update(get_params)
-      render json: @todo
+    @task = Task.find(params[:id])
+    if @task.update(get_params)
+      render json: @task
     else
       render :new, status: :unprocessable_entity
     end
