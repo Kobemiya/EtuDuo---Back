@@ -22,6 +22,20 @@ RSpec.configure do |config|
         version: 'v1'
       },
       paths: {},
+      components: {
+        securitySchemes: {
+          BearerToken: {
+            description: 'Auth0 bearer token',
+            scheme: :bearer,
+            type: :apiKey,
+            name: 'Authorization',
+            in: :header
+          }
+        }
+      },
+      security: [
+        BearerToken: []
+      ],
       servers: [
         {
           url: 'http://localhost:3000'
