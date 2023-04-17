@@ -1,6 +1,10 @@
 Rails.application.routes.draw do
   mount Rswag::Ui::Engine => '/api-docs'
   mount Rswag::Api::Engine => '/api-docs'
+
+  scope :tasks do
+    resources :tags
+  end
   resources :tasks
   get '/user', to: "user#index"
   post '/user', to: "user#create"

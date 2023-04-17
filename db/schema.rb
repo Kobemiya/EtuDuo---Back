@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_05_06_150320) do
+ActiveRecord::Schema[7.0].define(version: 2023_05_08_170022) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -27,6 +27,19 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_06_150320) do
     t.index ["user_id"], name: "index_profiles_on_user_id"
   end
 
+  create_table "tags", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "color", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_tags_on_name", unique: true
+  end
+
+  create_table "tags_tasks", id: false, force: :cascade do |t|
+    t.bigint "task_id", null: false
+    t.bigint "tag_id", null: false
+  end
+
   create_table "tasks", force: :cascade do |t|
     t.string "title", null: false
     t.string "description", null: false
@@ -36,6 +49,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_06_150320) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "author_id"
+    t.boolean "unmovable", null: false
+    t.string "recurrence"
     t.index ["author_id"], name: "index_tasks_on_author_id"
   end
 

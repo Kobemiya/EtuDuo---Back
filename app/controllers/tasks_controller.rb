@@ -1,7 +1,10 @@
 class TasksController < ApplicationController
   private
   def get_params
-    params.require(:task).permit(:title, :description, :done, :start, :end)
+    task_params = params.require(:task).permit(:title, :description, :done, :start, :end, :unmovable, :recurrence, tags: [])
+    task_params[:tags] ||= []
+    task_params[:tags].map! { |tag_id| Tag.find(tag_id) }
+    task_params
   end
 
   def verify_existence
@@ -32,7 +35,7 @@ class TasksController < ApplicationController
   end
 
   def index
-    @tasks = Task.where(author_id: @user.auth0Id) || []
+    @tasks = @user.tasks
     render json: @tasks
   end
 
