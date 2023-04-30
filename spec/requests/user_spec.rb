@@ -61,7 +61,20 @@ RSpec.describe 'user', type: :request do
     end
 
     patch('User update') do
+      tags 'User'
+      consumes 'application/json'
+      produces 'application/json'
+      description 'Update the user\'s infos in DB'
 
+      parameter name: :body, description: 'Update with user infos', in: :body,
+                schema: { '$ref' => '#/components/requestSchemas/updateUser' }
+
+      response(401, 'Unauthorized') do run_test! end
+      response(404, 'Not Found') do run_test! end
+      response(200, 'Successful') do
+        schema '$ref' => '#/components/schemas/user'
+        run_test!
+      end
     end
   end
 end
