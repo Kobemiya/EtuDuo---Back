@@ -31,7 +31,27 @@ RSpec.configure do |config|
             name: 'Authorization',
             in: :header
           }
-        }
+        },
+        schemas: {
+          user: {
+            type: 'object',
+            properties: {
+              auth0Id: { type: 'string' },
+              username: { type: 'string' }
+            },
+            required: %w[auth0Id username]
+          }
+        },
+        responseSchemas: {},
+        requestSchemas: {
+          createUser: {
+            properties: { username: { type: 'string' } },
+            required: %w[username]
+          },
+          updateUser: {
+            properties: { username: { type: 'string'} }
+          }
+        },
       },
       security: [
         BearerToken: []

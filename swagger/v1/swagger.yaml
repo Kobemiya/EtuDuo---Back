@@ -3,7 +3,82 @@ openapi: 3.0.1
 info:
   title: API V1
   version: v1
-paths: {}
+paths:
+  "/user":
+    get:
+      summary: User infos
+      tags:
+      - User
+      description: Fetch the user's informations stored in the DB
+      responses:
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/user"
+    post:
+      summary: User creation
+      tags:
+      - User
+      description: Create a user in DB to sync with Auth0 user
+      parameters: []
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/user"
+        '401':
+          description: Unauthorized
+        '409':
+          description: User already exists
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/requestSchemas/createUser"
+        description: Create with user infos
+    delete:
+      summary: User deletion
+      tags:
+      - User
+      description: Delete the user in DB to desync with Auth0 user
+      responses:
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+        '204':
+          description: Deleted
+    put:
+      summary: User update
+      tags:
+      - User
+      description: Update the user's infos in DB
+      parameters: []
+      responses:
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/user"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/requestSchemas/updateUser"
+        description: Update with user infos
 components:
   securitySchemes:
     BearerToken:
@@ -12,6 +87,29 @@ components:
       type: apiKey
       name: Authorization
       in: header
+  schemas:
+    user:
+      type: object
+      properties:
+        auth0Id:
+          type: string
+        username:
+          type: string
+      required:
+      - auth0Id
+      - username
+  responseSchemas: {}
+  requestSchemas:
+    createUser:
+      properties:
+        username:
+          type: string
+      required:
+      - username
+    updateUser:
+      properties:
+        username:
+          type: string
 security:
 - BearerToken: []
 servers:

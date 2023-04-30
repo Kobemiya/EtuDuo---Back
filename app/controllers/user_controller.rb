@@ -1,22 +1,19 @@
 class UserController < ApplicationController
-  private
-  def get_params
-    params.require(:user).permit(:username)
-  end
-
   before_action :identify!, except: %i[create]
   before_action :authorize!, only: %i[create]
 
   public
   def create
-    user_params = get_params
+    user_params = params.require(:user).permit(:username)
     user_params['auth0Id'] = @token['sub']
     @user = User.new(user_params)
     if @user.save
       render json: @user
     else
-      render :new, status: :unprocessable_entity
+      head :unprocessable_entity
     end
+  rescue ActiveRecord::RecordNotUnique => e
+    head :conflict
   end
 
   def index
@@ -25,14 +22,14 @@ class UserController < ApplicationController
 
   def destroy
     @user.destroy
-    render json: @user
+    head :no_content
   end
 
   def update
-    if @user.update(get_params)
+    if @user.update(params.permit(:username))
       render json: @user
     else
-      render :new, status: :unprocessable_entity
+      head :unprocessable_entity
     end
   end
 end
