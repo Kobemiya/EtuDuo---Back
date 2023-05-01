@@ -34,12 +34,51 @@ RSpec.configure do |config|
         },
         schemas: {
           user: {
+            allOf: [
+              { '$ref' => '#/components/idSchemas/withAuth0Id'},
+              { '$ref' => '#/components/propertiesSchemas/userProperties'}
+            ],
+            required: %w[auth0Id username]
+          },
+          task: {
+            allOf: [
+              { '$ref' => '#/components/idSchemas/withId'},
+              { '$ref' => '#/components/propertiesSchemas/taskProperties'}
+            ],
+            required: %w[id title description done start end]
+          }
+        },
+        idSchemas: {
+          withAuth0Id: {
+            type: 'object',
+            properties: {
+              auth0Id: { type: 'string' }
+            }
+          },
+          withId: {
+            type: 'object',
+            properties: {
+              id: { type: 'integer'}
+            }
+          }
+        },
+        propertiesSchemas: {
+          userProperties: {
             type: 'object',
             properties: {
               auth0Id: { type: 'string' },
               username: { type: 'string' }
-            },
-            required: %w[auth0Id username]
+            }
+          },
+          taskProperties: {
+            type: 'object',
+            properties: {
+              title: { type: 'string' },
+              description: { type: 'string' },
+              done: { type: 'boolean' },
+              start: { type: 'string', format: 'date-time', nullable: true },
+              end: { type: 'string', format: 'date-time', nullable: true }
+            }
           }
         },
         responseSchemas: {},

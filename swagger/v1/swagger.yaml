@@ -7,42 +7,130 @@ paths:
   "/tasks":
     get:
       summary: list tasks
+      tags:
+      - Tasks
       responses:
         '200':
-          description: successful
+          description: Successful
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/task"
+        '401':
+          description: Unauthorized
     post:
       summary: create task
+      tags:
+      - Tasks
+      parameters: []
       responses:
         '200':
-          description: successful
+          description: Created
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/task"
+        '401':
+          description: Unauthorized
+      requestBody:
+        content:
+          application/json:
+            schema:
+              allOf:
+              - "$ref": "#/components/propertiesSchemas/taskProperties"
+              required:
+              - title
+              - description
+              - done
+        description: Task infos
   "/tasks/{id}":
     parameters:
     - name: id
       in: path
-      description: id
+      description: DB object id
       required: true
       schema:
-        type: string
+        type: integer
     get:
       summary: show task
+      tags:
+      - Tasks
       responses:
         '200':
-          description: successful
-    patch:
-      summary: update task
-      responses:
-        '200':
-          description: successful
-    put:
-      summary: update task
-      responses:
-        '200':
-          description: successful
+          description: Successful
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/task"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
     delete:
       summary: delete task
+      tags:
+      - Tasks
+      responses:
+        '204':
+          description: Deleted
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+    patch:
+      summary: update task
+      tags:
+      - Tasks
+      parameters: []
       responses:
         '200':
-          description: successful
+          description: Successful
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/task"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/propertiesSchemas/taskProperties"
+        description: Task infos
+    put:
+      summary: update task
+      tags:
+      - Tasks
+      parameters: []
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/task"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/propertiesSchemas/taskProperties"
+        description: Task infos
   "/user":
     get:
       summary: User infos
@@ -151,15 +239,59 @@ components:
       in: header
   schemas:
     user:
+      allOf:
+      - "$ref": "#/components/idSchemas/withAuth0Id"
+      - "$ref": "#/components/propertiesSchemas/userProperties"
+      required:
+      - auth0Id
+      - username
+    task:
+      allOf:
+      - "$ref": "#/components/idSchemas/withId"
+      - "$ref": "#/components/propertiesSchemas/taskProperties"
+      required:
+      - id
+      - title
+      - description
+      - done
+      - start
+      - end
+  idSchemas:
+    withAuth0Id:
+      type: object
+      properties:
+        auth0Id:
+          type: string
+    withId:
+      type: object
+      properties:
+        id:
+          type: integer
+  propertiesSchemas:
+    userProperties:
       type: object
       properties:
         auth0Id:
           type: string
         username:
           type: string
-      required:
-      - auth0Id
-      - username
+    taskProperties:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        done:
+          type: boolean
+        start:
+          type: string
+          format: date-time
+          nullable: true
+        end:
+          type: string
+          format: date-time
+          nullable: true
   responseSchemas: {}
   requestSchemas:
     createUser:
