@@ -7,6 +7,7 @@ RSpec.describe 'tasks', type: :request do
     get('list tasks') do
       tags 'Tasks'
       produces 'application/json'
+      description 'List all tasks the user has access to'
 
       response(200, 'Successful') do
         schema type: 'array', items: { '$ref' => '#/components/schemas/task' }
@@ -19,6 +20,7 @@ RSpec.describe 'tasks', type: :request do
       tags 'Tasks'
       consumes 'application/json'
       produces 'application/json'
+      description 'Creates a task with the provided infos'
 
       parameter name: :body, description: 'Task infos', in: :body,
                 schema: {
@@ -30,6 +32,7 @@ RSpec.describe 'tasks', type: :request do
         schema '$ref' => '#/components/schemas/task'
         run_test!
       end
+      response(400, 'Bad request') do run_test! end
       response(401, 'Unauthorized') do run_test! end
     end
   end
@@ -40,6 +43,7 @@ RSpec.describe 'tasks', type: :request do
     get('show task') do
       tags 'Tasks'
       produces 'application/json'
+      description 'Get the task with the provided id'
 
       response(200, 'Successful') do
         schema '$ref' => '#/components/schemas/task'
@@ -52,6 +56,8 @@ RSpec.describe 'tasks', type: :request do
 
     delete('delete task') do
       tags 'Tasks'
+      description 'Delete the task with the providede id'
+
       response(204, 'Deleted') do run_test! end
       response(401, 'Unauthorized') do run_test! end
       response(403, 'Forbidden') do run_test! end
@@ -62,6 +68,8 @@ RSpec.describe 'tasks', type: :request do
       tags 'Tasks'
       consumes 'application/json'
       produces 'application/json'
+      description 'Update the task with the providede id'
+
       parameter name: :body, description: 'Task infos', in: :body,
                 schema: {'$ref' => '#/components/propertiesSchemas/taskProperties' }
 
@@ -69,6 +77,7 @@ RSpec.describe 'tasks', type: :request do
         schema '$ref' => '#/components/schemas/task'
         run_test!
       end
+      response(400, 'Bad request') do run_test! end
       response(401, 'Unauthorized') do run_test! end
       response(403, 'Forbidden') do run_test! end
       response(404, 'Not Found') do run_test! end
@@ -78,6 +87,8 @@ RSpec.describe 'tasks', type: :request do
       tags 'Tasks'
       consumes 'application/json'
       produces 'application/json'
+      description 'Update the task with the providede id'
+
       parameter name: :body, description: 'Task infos', in: :body,
                 schema: {'$ref' => '#/components/propertiesSchemas/taskProperties' }
 
@@ -85,6 +96,7 @@ RSpec.describe 'tasks', type: :request do
         schema '$ref' => '#/components/schemas/task'
         run_test!
       end
+      response(400, 'Bad request') do run_test! end
       response(401, 'Unauthorized') do run_test! end
       response(403, 'Forbidden') do run_test! end
       response(404, 'Not Found') do run_test! end

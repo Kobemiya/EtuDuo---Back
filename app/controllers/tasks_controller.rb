@@ -4,11 +4,16 @@ class TasksController < ApplicationController
     params.require(:task).permit(:title, :description, :done, :start, :end)
   end
 
+  def verify_existence
+    head :not_found unless Task.where(id: params[:id]).exists?
+  end
+
   def verify_access
-    head :forbidden unless @user.tasks.where(id: params[:id]).any?
+    head :forbidden unless @user.tasks.where(id: params[:id]).exists?
   end
 
   before_action :identify!
+  before_action :verify_existence, except: %i[create index]
   before_action :verify_access, except: %i[create index]
 
   public
@@ -19,8 +24,10 @@ class TasksController < ApplicationController
     if @task.save
       render json: @task
     else
-      render :new, status: :unprocessable_entity
+      head :unprocessable_entity
     end
+  rescue ActiveRecord::NotNullViolation => e
+    head :bad_request
   end
 
   def index
@@ -36,7 +43,7 @@ class TasksController < ApplicationController
   def destroy
     @task = Task.find(params[:id])
     @task.destroy
-    render json: @task
+    head :no_content
   end
 
   def update
@@ -44,7 +51,9 @@ class TasksController < ApplicationController
     if @task.update(get_params)
       render json: @task
     else
-      render :new, status: :unprocessable_entity
+      head :unprocessable_entity
     end
+  rescue ActiveRecord::NotNullViolation => e
+    head :bad_request
   end
 end
