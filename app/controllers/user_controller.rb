@@ -1,6 +1,6 @@
 class UserController < ApplicationController
+  before_action :authorize!
   before_action :identify!, except: %i[create]
-  before_action :authorize!, only: %i[create]
 
   public
   def create
@@ -12,6 +12,8 @@ class UserController < ApplicationController
     else
       head :unprocessable_entity
     end
+  rescue ActiveRecord::NotNullViolation => e
+    head :bad_request
   rescue ActiveRecord::RecordNotUnique => e
     head :conflict
   end
@@ -31,5 +33,7 @@ class UserController < ApplicationController
     else
       head :unprocessable_entity
     end
+  rescue ActiveRecord::NotNullViolation => e
+    head :bad_request
   end
 end

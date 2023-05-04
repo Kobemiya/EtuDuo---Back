@@ -34,6 +34,7 @@ RSpec.describe 'tasks', type: :request do
       end
       response(400, 'Bad request') do run_test! end
       response(401, 'Unauthorized') do run_test! end
+      response(422, 'Unprocessable Entity') do run_test! end
     end
   end
 
@@ -81,6 +82,7 @@ RSpec.describe 'tasks', type: :request do
       response(401, 'Unauthorized') do run_test! end
       response(403, 'Forbidden') do run_test! end
       response(404, 'Not Found') do run_test! end
+      response(422, 'Unprocessable Entity') do run_test! end
     end
 
     put('update task') do
@@ -100,6 +102,7 @@ RSpec.describe 'tasks', type: :request do
       response(401, 'Unauthorized') do run_test! end
       response(403, 'Forbidden') do run_test! end
       response(404, 'Not Found') do run_test! end
+      response(422, 'Unprocessable Entity') do run_test! end
     end
   end
 end

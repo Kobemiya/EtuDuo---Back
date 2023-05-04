@@ -12,6 +12,7 @@ class TasksController < ApplicationController
     head :forbidden unless @user.tasks.where(id: params[:id]).exists?
   end
 
+  before_action :authorize!
   before_action :identify!
   before_action :verify_existence, except: %i[create index]
   before_action :verify_access, except: %i[create index]

@@ -38,6 +38,8 @@ paths:
           description: Bad request
         '401':
           description: Unauthorized
+        '422':
+          description: Unprocessable Entity
       requestBody:
         content:
           application/json:
@@ -110,6 +112,8 @@ paths:
           description: Forbidden
         '404':
           description: Not Found
+        '422':
+          description: Unprocessable Entity
       requestBody:
         content:
           application/json:
@@ -137,6 +141,8 @@ paths:
           description: Forbidden
         '404':
           description: Not Found
+        '422':
+          description: Unprocessable Entity
       requestBody:
         content:
           application/json:
@@ -150,16 +156,14 @@ paths:
       - User
       description: Fetch the user's informations stored in the DB
       responses:
-        '401':
-          description: Unauthorized
-        '404':
-          description: Not Found
         '200':
           description: Successful
           content:
             application/json:
               schema:
                 "$ref": "#/components/schemas/user"
+        '401':
+          description: Unauthorized
     post:
       summary: User creation
       tags:
@@ -173,10 +177,14 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/user"
+        '400':
+          description: Bad request
         '401':
           description: Unauthorized
         '409':
-          description: Conflict
+          description: User already exists
+        '422':
+          description: Unprocessable Entity
       requestBody:
         content:
           application/json:
@@ -189,12 +197,10 @@ paths:
       - User
       description: Delete the user in DB to desync with Auth0 user
       responses:
-        '401':
-          description: Unauthorized
-        '404':
-          description: Not Found
         '204':
           description: Deleted
+        '401':
+          description: Unauthorized
     put:
       summary: User update
       tags:
@@ -202,16 +208,18 @@ paths:
       description: Update the user's infos in DB
       parameters: []
       responses:
-        '401':
-          description: Unauthorized
-        '404':
-          description: Not Found
         '200':
           description: Successful
           content:
             application/json:
               schema:
                 "$ref": "#/components/schemas/user"
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '422':
+          description: Unprocessable Entity
       requestBody:
         content:
           application/json:
@@ -225,16 +233,18 @@ paths:
       description: Update the user's infos in DB
       parameters: []
       responses:
-        '401':
-          description: Unauthorized
-        '404':
-          description: Not Found
         '200':
           description: Successful
           content:
             application/json:
               schema:
                 "$ref": "#/components/schemas/user"
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '422':
+          description: Unprocessable Entity
       requestBody:
         content:
           application/json:
