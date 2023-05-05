@@ -66,7 +66,6 @@ RSpec.configure do |config|
           userProperties: {
             type: 'object',
             properties: {
-              auth0Id: { type: 'string' },
               username: { type: 'string' }
             }
           },
@@ -80,17 +79,7 @@ RSpec.configure do |config|
               end: { type: 'string', format: 'date-time', nullable: true }
             }
           }
-        },
-        responseSchemas: {},
-        requestSchemas: {
-          createUser: {
-            properties: { username: { type: 'string' } },
-            required: %w[username]
-          },
-          updateUser: {
-            properties: { username: { type: 'string'} }
-          }
-        },
+        }
       },
       security: [
         BearerToken: []

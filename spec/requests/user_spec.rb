@@ -23,7 +23,10 @@ RSpec.describe 'user', type: :request do
       description 'Create a user in DB to sync with Auth0 user'
 
       parameter name: :body, description: 'Create with user infos', in: :body,
-                schema: { '$ref' => '#/components/requestSchemas/createUser' }
+                schema: {
+                  allOf: [ { '$ref' => '#/components/propertiesSchemas/userProperties' } ],
+                  required: %w[username]
+                }
 
       response(201, 'Created') do
         schema '$ref' => '#/components/schemas/user'
@@ -50,7 +53,7 @@ RSpec.describe 'user', type: :request do
       description 'Update the user\'s infos in DB'
 
       parameter name: :body, description: 'Update with user infos', in: :body,
-                schema: { '$ref' => '#/components/requestSchemas/updateUser' }
+                schema: { '$ref' => '#/components/propertiesSchemas/userProperties' }
 
       response(200, 'Successful') do
         schema '$ref' => '#/components/schemas/user'
@@ -68,7 +71,7 @@ RSpec.describe 'user', type: :request do
       description 'Update the user\'s infos in DB'
 
       parameter name: :body, description: 'Update with user infos', in: :body,
-                schema: { '$ref' => '#/components/requestSchemas/updateUser' }
+                schema: { '$ref' => '#/components/propertiesSchemas/userProperties' }
 
       response(200, 'Successful') do
         schema '$ref' => '#/components/schemas/user'

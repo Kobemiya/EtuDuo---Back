@@ -189,7 +189,10 @@ paths:
         content:
           application/json:
             schema:
-              "$ref": "#/components/requestSchemas/createUser"
+              allOf:
+              - "$ref": "#/components/propertiesSchemas/userProperties"
+              required:
+              - username
         description: Create with user infos
     delete:
       summary: User deletion
@@ -224,7 +227,7 @@ paths:
         content:
           application/json:
             schema:
-              "$ref": "#/components/requestSchemas/updateUser"
+              "$ref": "#/components/propertiesSchemas/userProperties"
         description: Update with user infos
     patch:
       summary: User update
@@ -249,7 +252,7 @@ paths:
         content:
           application/json:
             schema:
-              "$ref": "#/components/requestSchemas/updateUser"
+              "$ref": "#/components/propertiesSchemas/userProperties"
         description: Update with user infos
 components:
   securitySchemes:
@@ -293,8 +296,6 @@ components:
     userProperties:
       type: object
       properties:
-        auth0Id:
-          type: string
         username:
           type: string
     taskProperties:
@@ -314,18 +315,6 @@ components:
           type: string
           format: date-time
           nullable: true
-  responseSchemas: {}
-  requestSchemas:
-    createUser:
-      properties:
-        username:
-          type: string
-      required:
-      - username
-    updateUser:
-      properties:
-        username:
-          type: string
 security:
 - BearerToken: []
 servers:
