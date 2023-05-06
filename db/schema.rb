@@ -10,9 +10,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_04_05_161622) do
+ActiveRecord::Schema[7.0].define(version: 2023_05_06_150320) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "profiles", force: :cascade do |t|
+    t.datetime "start_work", null: false
+    t.datetime "end_work", null: false
+    t.integer "occupation", null: false
+    t.integer "prod_period", null: false
+    t.datetime "start_sleep"
+    t.datetime "end_sleep"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "user_id"
+    t.index ["user_id"], name: "index_profiles_on_user_id"
+  end
 
   create_table "tasks", force: :cascade do |t|
     t.string "title", null: false
@@ -34,5 +47,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_05_161622) do
     t.index ["auth0Id"], name: "index_users_on_auth0Id", unique: true
   end
 
+  add_foreign_key "profiles", "users", primary_key: "auth0Id"
   add_foreign_key "tasks", "users", column: "author_id", primary_key: "auth0Id"
 end
