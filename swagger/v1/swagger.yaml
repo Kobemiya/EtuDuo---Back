@@ -4,6 +4,151 @@ info:
   title: API V1
   version: v1
 paths:
+  "/tasks":
+    get:
+      summary: list tasks
+      tags:
+      - Tasks
+      description: List all tasks the user has access to
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/task"
+        '401':
+          description: Unauthorized
+    post:
+      summary: create task
+      tags:
+      - Tasks
+      description: Creates a task with the provided infos
+      parameters: []
+      responses:
+        '200':
+          description: Created
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/task"
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '422':
+          description: Unprocessable Entity
+      requestBody:
+        content:
+          application/json:
+            schema:
+              allOf:
+              - "$ref": "#/components/propertiesSchemas/taskProperties"
+              required:
+              - title
+              - description
+              - done
+        description: Task infos
+  "/tasks/{id}":
+    parameters:
+    - name: id
+      in: path
+      description: DB object id
+      required: true
+      schema:
+        type: integer
+    get:
+      summary: show task
+      tags:
+      - Tasks
+      description: Get the task with the provided id
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/task"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+    delete:
+      summary: delete task
+      tags:
+      - Tasks
+      description: Delete the task with the providede id
+      responses:
+        '204':
+          description: Deleted
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+    patch:
+      summary: update task
+      tags:
+      - Tasks
+      description: Update the task with the providede id
+      parameters: []
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/task"
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '422':
+          description: Unprocessable Entity
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/propertiesSchemas/taskProperties"
+        description: Task infos
+    put:
+      summary: update task
+      tags:
+      - Tasks
+      description: Update the task with the providede id
+      parameters: []
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/task"
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '422':
+          description: Unprocessable Entity
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/propertiesSchemas/taskProperties"
+        description: Task infos
   "/user":
     get:
       summary: User infos
@@ -11,16 +156,14 @@ paths:
       - User
       description: Fetch the user's informations stored in the DB
       responses:
-        '401':
-          description: Unauthorized
-        '404':
-          description: Not Found
         '200':
           description: Successful
           content:
             application/json:
               schema:
                 "$ref": "#/components/schemas/user"
+        '401':
+          description: Unauthorized
     post:
       summary: User creation
       tags:
@@ -34,15 +177,22 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/user"
+        '400':
+          description: Bad request
         '401':
           description: Unauthorized
         '409':
-          description: Conflict
+          description: User already exists
+        '422':
+          description: Unprocessable Entity
       requestBody:
         content:
           application/json:
             schema:
-              "$ref": "#/components/requestSchemas/createUser"
+              allOf:
+              - "$ref": "#/components/propertiesSchemas/userProperties"
+              required:
+              - username
         description: Create with user infos
     delete:
       summary: User deletion
@@ -50,12 +200,10 @@ paths:
       - User
       description: Delete the user in DB to desync with Auth0 user
       responses:
-        '401':
-          description: Unauthorized
-        '404':
-          description: Not Found
         '204':
           description: Deleted
+        '401':
+          description: Unauthorized
     put:
       summary: User update
       tags:
@@ -63,21 +211,23 @@ paths:
       description: Update the user's infos in DB
       parameters: []
       responses:
-        '401':
-          description: Unauthorized
-        '404':
-          description: Not Found
         '200':
           description: Successful
           content:
             application/json:
               schema:
                 "$ref": "#/components/schemas/user"
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '422':
+          description: Unprocessable Entity
       requestBody:
         content:
           application/json:
             schema:
-              "$ref": "#/components/requestSchemas/updateUser"
+              "$ref": "#/components/propertiesSchemas/userProperties"
         description: Update with user infos
     patch:
       summary: User update
@@ -86,21 +236,23 @@ paths:
       description: Update the user's infos in DB
       parameters: []
       responses:
-        '401':
-          description: Unauthorized
-        '404':
-          description: Not Found
         '200':
           description: Successful
           content:
             application/json:
               schema:
                 "$ref": "#/components/schemas/user"
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '422':
+          description: Unprocessable Entity
       requestBody:
         content:
           application/json:
             schema:
-              "$ref": "#/components/requestSchemas/updateUser"
+              "$ref": "#/components/propertiesSchemas/userProperties"
         description: Update with user infos
 components:
   securitySchemes:
@@ -112,27 +264,57 @@ components:
       in: header
   schemas:
     user:
+      allOf:
+      - "$ref": "#/components/idSchemas/withAuth0Id"
+      - "$ref": "#/components/propertiesSchemas/userProperties"
+      required:
+      - auth0Id
+      - username
+    task:
+      allOf:
+      - "$ref": "#/components/idSchemas/withId"
+      - "$ref": "#/components/propertiesSchemas/taskProperties"
+      required:
+      - id
+      - title
+      - description
+      - done
+      - start
+      - end
+  idSchemas:
+    withAuth0Id:
       type: object
       properties:
         auth0Id:
           type: string
-        username:
-          type: string
-      required:
-      - auth0Id
-      - username
-  responseSchemas: {}
-  requestSchemas:
-    createUser:
+    withId:
+      type: object
+      properties:
+        id:
+          type: integer
+  propertiesSchemas:
+    userProperties:
+      type: object
       properties:
         username:
           type: string
-      required:
-      - username
-    updateUser:
+    taskProperties:
+      type: object
       properties:
-        username:
+        title:
           type: string
+        description:
+          type: string
+        done:
+          type: boolean
+        start:
+          type: string
+          format: date-time
+          nullable: true
+        end:
+          type: string
+          format: date-time
+          nullable: true
 security:
 - BearerToken: []
 servers:

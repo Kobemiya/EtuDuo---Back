@@ -5,21 +5,22 @@ class ApplicationController < ActionController::API
 
   def authorize!
     valid, result = verify(raw_token(request.headers))
-    head :unauthorized unless valid
+    begin render status: :unauthorized,
+           json: { "error": "Invalid token", "description": "User not registered in Auth0, invalid, expired or empty token" }
+    end unless valid
     @token ||= result
   end
 
   def identify!
-    valid, result = verify(raw_token(request.headers))
-    head :unauthorized unless valid
-    @user = User.find(result['sub']) if valid
-    @token ||= result
-  rescue ActiveRecord::UnknownPrimaryKey => e
-    head :conflict
+    exist = User.where(auth0Id: @token['sub']).exists?
+    begin render status: :unauthorized,
+           json: { "error": "Invalid user", "description": "User not found in DB, but present on Auth0, server might be desyncronized with DB" }
+    end unless exist
+    @user = User.find(result['sub']) if exist
   end
 
-  def check_permissions(token, permission)
-    permissions = token['scope'] || []
+  def check_permissions(permission)
+    permissions = @token['scope'] || []
     permissions = permissions.split if permissions.is_a? String
     head :forbidden unless permissions.include?(permission)
   end
