@@ -5,22 +5,19 @@ class ProfileController < ApplicationController
   public
   def index
     @profile = @user.profile
-    render @profile
+    render json: @profile
   end
 
   def update
     body = params.require(:profile).permit(:start_work, :end_work, :occupation, :prod_period, :start_sleep, :end_sleep)
-    head :no_content
-    if @user.profile.present?
-      head :unprocessable_entity unless @user.profile.update(body)
-      @profile = @user.profile
+    @profile = Profile.new(body)
+    @profile.user_id = @user.auth0Id
+    if !@profile.save
+      head :unprocessable_entity
     else
-      @profile = Profile.new(body)
-      if @profile.save
-        @user.profile = @profile
-      else
-        head :unprocessable_entity
-      end
+      @user.profile.destroy if @user.profile.present?
+      @user.profile = @profile
+      head :no_content
     end
   rescue ActiveRecord::NotNullViolation, ArgumentError => e
     head :bad_request
