@@ -7,4 +7,6 @@ Rails.application.routes.draw do
   delete '/user', to: "user#destroy"
   put '/user', to: "user#update"
   patch '/user', to: "user#update"
+  get '/profile', to: "profile#index"
+  put '/profile', to: "profile#update"
 end

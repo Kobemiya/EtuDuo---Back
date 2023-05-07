@@ -4,6 +4,48 @@ info:
   title: API V1
   version: v1
 paths:
+  "/profile":
+    get:
+      summary: Show profile
+      tags:
+      - Profile
+      description: Show user's current profile informations
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/profile"
+        '401':
+          description: Unauthorized
+    put:
+      summary: Update profile
+      tags:
+      - Profile
+      description: Update or create the user's profile
+      parameters: []
+      responses:
+        '204':
+          description: Created or Updated
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '422':
+          description: Unprocessable Entity
+      requestBody:
+        content:
+          application/json:
+            schema:
+              allOf:
+              - "$ref": "#/components/propertiesSchemas/profileProperties"
+              required:
+              - occupation
+              - prod_period
+              - start_work
+              - end_work
+        description: Profile infos
   "/tasks":
     get:
       summary: list tasks
@@ -281,6 +323,18 @@ components:
       - done
       - start
       - end
+    profile:
+      allOf:
+      - "$ref": "#/components/idSchemas/withId"
+      - "$ref": "#/components/propertiesSchemas/profileProperties"
+      required:
+      - id
+      - occupation
+      - prod_period
+      - start_work
+      - end_work
+      - start_sleep
+      - end_sleep
   idSchemas:
     withAuth0Id:
       type: object
@@ -312,6 +366,36 @@ components:
           format: date-time
           nullable: true
         end:
+          type: string
+          format: date-time
+          nullable: true
+    profileProperties:
+      type: object
+      properties:
+        occupation:
+          type: string
+          enum:
+          - school
+          - college
+          - work
+          - free
+        prod_period:
+          type: string
+          enum:
+          - before
+          - after
+          - both
+        start_work:
+          type: string
+          format: date-time
+        end_work:
+          type: string
+          format: date-time
+        start_sleep:
+          type: string
+          format: date-time
+          nullable: true
+        end_sleep:
           type: string
           format: date-time
           nullable: true

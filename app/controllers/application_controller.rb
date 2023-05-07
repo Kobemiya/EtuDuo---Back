@@ -16,7 +16,7 @@ class ApplicationController < ActionController::API
     begin render status: :unauthorized,
            json: { "error": "Invalid user", "description": "User not found in DB, but present on Auth0, server might be desyncronized with DB" }
     end unless exist
-    @user = User.find(result['sub']) if exist
+    @user = User.find(@token['sub']) if exist
   end
 
   def check_permissions(permission)
