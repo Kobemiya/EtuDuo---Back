@@ -35,17 +35,24 @@ RSpec.configure do |config|
         schemas: {
           user: {
             allOf: [
-              { '$ref' => '#/components/idSchemas/withAuth0Id'},
-              { '$ref' => '#/components/propertiesSchemas/userProperties'}
+              { '$ref' => '#/components/idSchemas/withAuth0Id' },
+              { '$ref' => '#/components/propertiesSchemas/userProperties' }
             ],
             required: %w[auth0Id username]
           },
           task: {
             allOf: [
-              { '$ref' => '#/components/idSchemas/withId'},
-              { '$ref' => '#/components/propertiesSchemas/taskProperties'}
+              { '$ref' => '#/components/idSchemas/withId' },
+              { '$ref' => '#/components/propertiesSchemas/taskProperties' }
             ],
             required: %w[id title description done start end]
+          },
+          profile: {
+            allOf: [
+              { '$ref' => '#/components/idSchemas/withId' },
+              { '$ref' => '#/components/propertiesSchemas/profileProperties' }
+            ],
+            required: %w[id occupation prod_period start_work end_work start_sleep end_sleep]
           }
         },
         idSchemas: {
@@ -58,7 +65,7 @@ RSpec.configure do |config|
           withId: {
             type: 'object',
             properties: {
-              id: { type: 'integer'}
+              id: { type: 'integer' }
             }
           }
         },
@@ -77,6 +84,17 @@ RSpec.configure do |config|
               done: { type: 'boolean' },
               start: { type: 'string', format: 'date-time', nullable: true },
               end: { type: 'string', format: 'date-time', nullable: true }
+            }
+          },
+          profileProperties: {
+            type: 'object',
+            properties: {
+              occupation: { type: 'string', enum: %w[school college work free] },
+              prod_period: { type: 'string', enum: %w[before after both] },
+              start_work: { type: 'string', format: 'date-time' },
+              end_work: { type: 'string', format: 'date-time' },
+              start_sleep: { type: 'string', format: 'date-time', nullable: true },
+              end_sleep: { type: 'string', format: 'date-time', nullable: true }
             }
           }
         }
