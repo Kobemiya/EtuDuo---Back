@@ -4,6 +4,7 @@ class TagsController < ApplicationController
     params.require(:tag).permit(:name, :color)
   end
 
+  before_action :authorize!
   before_action :identify!
 
   public
@@ -12,7 +13,7 @@ class TagsController < ApplicationController
     if @tag.save
       render json: @tag
     else
-      render :new, status: :unprocessable_entity
+      head :unprocessable_entity
     end
   end
 
@@ -29,7 +30,7 @@ class TagsController < ApplicationController
   def destroy
     @tag = Tag.find(params[:id])
     @tag.destroy
-    render json: @tag
+    head :no_content
   end
 
   def update
@@ -37,7 +38,7 @@ class TagsController < ApplicationController
     if @tag.update(get_params)
       render json: @tag
     else
-      render :new, status: :unprocessable_entity
+      head :unprocessable_entity
     end
   end
 end

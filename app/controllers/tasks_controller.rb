@@ -1,10 +1,12 @@
 class TasksController < ApplicationController
   private
   def get_params
-    task_params = params.require(:task).permit(:title, :description, :done, :start, :end, :unmovable, :recurrence, tags: [])
-    task_params[:tags] ||= []
-    task_params[:tags].map! { |tag_id| Tag.find(tag_id) }
-    task_params
+    task = params.require(:task).permit(:title, :description, :done, :start, :end, :unmovable, :recurrence, recurrence: [], tags: [])
+
+    task[:tags].map!{ |tag_id| Tag.find(tag_id) } if task[:tags].present?
+    task[:recurrence] = task[:recurrence].uniq.join(",") if task[:recurrence].is_a?(Array)
+
+    task
   end
 
   def verify_existence
@@ -15,15 +17,36 @@ class TasksController < ApplicationController
     head :forbidden unless @user.tasks.where(id: params[:id]).exists?
   end
 
+  def verify_format
+    task = params.require(:task).permit(:title, :description, :done, :start, :end, :unmovable, :recurrence, recurrence: [], tags: [])
+
+    if task.key?(:tags)
+      head :bad_request if task[:tags].nil?
+      head :bad_request unless task[:tags].all?{ |tag_id| Tag.where(id: tag_id).exists? }
+    end
+
+    if task[:recurrence].is_a?(String)
+      head :bad_request if task[:recurrence].is_a?(String) && task[:recurrence] != "yearly"
+    elsif task[:recurrence].is_a?(Array)
+      week_days = %w[monday tuesday wednesday thursday friday saturday sunday]
+      head :bad_request unless task[:recurrence].all?{ |day| day.is_a?(String) && week_days.include?(day) }
+    elsif task[:recurrence].present?
+      head :bad_request
+    end
+  end
+
   before_action :authorize!
   before_action :identify!
   before_action :verify_existence, except: %i[create index]
   before_action :verify_access, except: %i[create index]
+  before_action :verify_format, only: %i[create update]
 
   public
 
   def create
-    @task = Task.new(get_params)
+    task = get_params
+    return head :bad_request if task[:tags].nil?
+    @task = Task.new(task)
     @task.author_id = @user.auth0Id
     if @task.save
       render json: @task
