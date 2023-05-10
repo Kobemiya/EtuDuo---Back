@@ -4,6 +4,7 @@ Rails.application.routes.draw do
 
   scope :tasks do
     resources :tags
+    post '/tags/global', to: "tags#global_create"
   end
   resources :tasks
   get '/user', to: "user#index"

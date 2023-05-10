@@ -14,12 +14,24 @@ class TagsController < ApplicationController
 
   before_action :authorize!
   before_action :identify!
-  before_action :verify_existence, except: %i[create index]
-  before_action :verify_access, except: %i[create index]
-
+  before_action :verify_existence, except: %i[create global_create index]
+  before_action :verify_access, except: %i[create global_create index]
 
   public
   def create
+    @tag = Tag.new(get_params)
+    @tag.user = @user
+    if @tag.save
+      render json: @tag
+    else
+      head :unprocessable_entity
+    end
+  rescue ActiveRecord::NotNullViolation => e
+    head :bad_request
+  end
+
+  def global_create
+    return head :forbidden unless has_permissions('create:global_tags')
     @tag = Tag.new(get_params)
     if @tag.save
       render json: @tag
@@ -31,7 +43,8 @@ class TagsController < ApplicationController
   end
 
   def index
-    @tags = @user.tags
+    @tags = Tag.where(user_id: nil).to_ary
+    @tags.concat(@user.tags)
     render json: @tags
   end
 
@@ -42,12 +55,14 @@ class TagsController < ApplicationController
 
   def destroy
     @tag = Tag.find(params[:id])
+    return head :forbidden unless has_permissions('delete:global_tags')
     @tag.destroy
     head :no_content
   end
 
   def update
     @tag = Tag.find(params[:id])
+    return head :forbidden unless has_permissions('update:global_tags')
     if @tag.update(get_params)
       render json: @tag
     else
