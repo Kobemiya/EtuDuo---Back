@@ -12,8 +12,13 @@ class TagsController < ApplicationController
     head :forbidden unless @user.tags.where(id: params[:id]).exists?
   end
 
+  def verify_format
+    head :bad_request if /#[A-Fa-f0-9]{6}/.match(params[:color]).nil?
+  end
+
   before_action :authorize!
   before_action :identify!
+  before_action :verify_format, only: %i[create global_create update]
   before_action :verify_existence, except: %i[create global_create index]
   before_action :verify_access, except: %i[create global_create index]
 
