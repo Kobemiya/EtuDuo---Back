@@ -51,7 +51,7 @@ paths:
       summary: List tags
       tags:
       - Tasks tags
-      description: List all user's task tags
+      description: List all tasks tags user has access to
       responses:
         '200':
           description: Successful
@@ -80,6 +80,38 @@ paths:
           description: Bad request
         '401':
           description: Unauthorized
+        '422':
+          description: Unprocessable Entity
+      requestBody:
+        content:
+          application/json:
+            schema:
+              allOf:
+              - "$ref": "#/components/propertiesSchemas/tagProperties"
+              required:
+              - name
+              - color
+        description: Tag infos
+  "/tasks/tags/global":
+    post:
+      summary: Create global tag
+      tags:
+      - Tasks tags
+      description: Create a global tag for the tasks, needs appropriate permissions
+      parameters: []
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/tag"
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
         '422':
           description: Unprocessable Entity
       requestBody:
@@ -482,11 +514,13 @@ components:
     tag:
       allOf:
       - "$ref": "#/components/idSchemas/withId"
-      - "$ref": "#/components/propertiesSchemas/tagsProperties"
+      - "$ref": "#/components/propertiesSchemas/tagProperties"
+      - "$ref": "#/components/additionalPropertiesSchemas/tagGlobalProperty"
       required:
       - id
       - name
       - color
+      - global
   idSchemas:
     withAuth0Id:
       type: object
@@ -572,14 +606,20 @@ components:
           type: string
           format: date-time
           nullable: true
-    tagsProperties:
+    tagProperties:
       type: object
       properties:
         name:
           type: string
         color:
           type: string
-          pattern: "#([A-Fa-f0-9]){6}"
+          pattern: "#[A-Fa-f0-9]{6}"
+  additionalPropertiesSchemas:
+    tagGlobalProperty:
+      type: object
+      properties:
+        global:
+          type: boolean
 security:
 - BearerToken: []
 servers:

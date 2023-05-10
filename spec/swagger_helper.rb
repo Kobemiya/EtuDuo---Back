@@ -57,9 +57,10 @@ RSpec.configure do |config|
           tag: {
             allOf: [
               { '$ref' => '#/components/idSchemas/withId' },
-              { '$ref' => '#/components/propertiesSchemas/tagsProperties' }
+              { '$ref' => '#/components/propertiesSchemas/tagProperties' },
+              { '$ref' => '#/components/additionalPropertiesSchemas/tagGlobalProperty' }
             ],
-            required: %w[id name color]
+            required: %w[id name color global]
           }
         },
         idSchemas: {
@@ -110,11 +111,19 @@ RSpec.configure do |config|
               end_sleep: { type: 'string', format: 'date-time', nullable: true },
             }
           },
-          tagsProperties: {
+          tagProperties: {
             type: 'object',
             properties: {
               name: { type: 'string' },
-              color: { type: 'string', pattern: '#([A-Fa-f0-9]){6}' }
+              color: { type: 'string', pattern: '#[A-Fa-f0-9]{6}' }
+            }
+          }
+        },
+        additionalPropertiesSchemas: {
+          tagGlobalProperty: {
+            type: 'object',
+            properties: {
+              global: { type: 'boolean' }
             }
           }
         }

@@ -7,7 +7,7 @@ RSpec.describe 'tags', type: :request do
     get('List tags') do
       tags 'Tasks tags'
       produces 'application/json'
-      description 'List all user\'s task tags'
+      description 'List all tasks tags user has access to'
 
       response(200, 'Successful') do
         schema type: 'array', items: { '$ref' => '#/components/schemas/tag' }
@@ -38,6 +38,31 @@ RSpec.describe 'tags', type: :request do
     end
   end
 
+  path '/tasks/tags/global' do
+    post('Create global tag') do
+      tags 'Tasks tags'
+      consumes 'application/json'
+      produces 'application/json'
+      description 'Create a global tag for the tasks, needs appropriate permissions'
+
+      parameter name: :body, description: 'Tag infos', in: :body,
+                schema: {
+                  allOf: [ { '$ref' => '#/components/propertiesSchemas/tagProperties' } ],
+                  required: %w[name color]
+                }
+
+      response(200, 'Successful') do
+        schema '$ref' => '#/components/schemas/tag'
+        run_test!
+      end
+      response(400, 'Bad request') do run_test! end
+      response(401, 'Unauthorized') do run_test! end
+      response(403, 'Forbidden') do run_test! end
+      response(422, 'Unprocessable Entity') do run_test! end
+  end
+
+  end
+
   path '/tasks/tags/{id}' do
 
     parameter name: 'id', in: :path, type: :string, description: 'id'
@@ -63,7 +88,7 @@ RSpec.describe 'tags', type: :request do
       description 'Update a tag\'s infos'
 
       parameter name: :body, description: 'Tag infos', in: :body,
-                schema: {'$ref' => '#/components/propertiesSchemas/tagProperties' }
+                schema: { '$ref' => '#/components/propertiesSchemas/tagProperties' }
 
       response(200, 'Successful') do
         schema '$ref' => '#/components/schemas/tag'
