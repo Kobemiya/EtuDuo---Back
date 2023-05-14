@@ -61,6 +61,13 @@ RSpec.configure do |config|
               { '$ref' => '#/components/additionalPropertiesSchemas/tagGlobalProperty' }
             ],
             required: %w[id name color global]
+          },
+          accessory: {
+            allOf: [
+              { '$ref' => '#/components/idSchemas/withId' },
+              { '$ref' => '#/components/propertiesSchemas/accessoryProperties' }
+            ],
+            required: %w[id name image_path body_part]
           }
         },
         idSchemas: {
@@ -124,6 +131,14 @@ RSpec.configure do |config|
             type: 'object',
             properties: {
               global: { type: 'boolean' }
+            }
+          },
+          accessoryProperties: {
+            type: 'object',
+            properties: {
+              name: { type: 'string' },
+              image_path: { type: 'string', pattern: '/[a-z0-9_]+' },
+              body_part: { type: 'string', enum: %w[hair hand face neck torso legs feet] }
             }
           }
         }

@@ -9,7 +9,6 @@ class AccessoriesController < ApplicationController
 
   public
   def index
-    return head :forbidden unless has_permissions("read:accessories")
     @accessories = Accessory.all
     render json: @accessories
   end
@@ -24,10 +23,11 @@ class AccessoriesController < ApplicationController
     end
   rescue ActiveRecord::NotNullViolation => e
     head :bad_request
+  rescue ActiveRecord::RecordNotUnique => e
+    head :conflict
   end
 
   def show
-    return head :forbidden unless has_permissions("read:accessories")
     @accessory = Accessory.find(params[:id])
     render json: @accessory
   end

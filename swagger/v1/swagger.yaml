@@ -4,6 +4,153 @@ info:
   title: API V1
   version: v1
 paths:
+  "/accessories":
+    get:
+      summary: list accessories
+      tags:
+      - Accessories
+      description: List all accessories in the game
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/accessory"
+        '401':
+          description: Unauthorized
+    post:
+      summary: create accessory
+      tags:
+      - Accessories
+      description: Create a new accessory (needs perms)
+      parameters: []
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/accessory"
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '409':
+          description: Accessory already exists
+        '422':
+          description: Unprocessable Entity
+      requestBody:
+        content:
+          application/json:
+            schema:
+              allOf:
+              - "$ref": "#/components/propertiesSchemas/accessoryProperties"
+              required:
+              - name
+              - image_path
+              - body_part
+        description: Accessory infos
+  "/accessories/{id}":
+    parameters:
+    - name: id
+      in: path
+      description: id
+      required: true
+      schema:
+        type: integer
+    get:
+      summary: show accessory
+      tags:
+      - Accessories
+      description: Get infos on a specified accessory
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/accessory"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not found
+    patch:
+      summary: update accessory
+      tags:
+      - Accessories
+      description: Update infos of a specified accessory (needs perms)
+      parameters: []
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/accessory"
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not found
+        '422':
+          description: Unprocessable Entity
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/propertiesSchemas/accessoryProperties"
+        description: Accessory infos
+    put:
+      summary: update accessory
+      tags:
+      - Accessories
+      description: Update infos of a specified accessory (needs perms)
+      parameters: []
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/accessory"
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not found
+        '422':
+          description: Unprocessable Entity
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/propertiesSchemas/accessoryProperties"
+        description: Accessory infos
+    delete:
+      summary: delete accessory
+      tags:
+      - Accessories
+      description: Delete a specified accessory (needs perms)
+      responses:
+        '204':
+          description: Deleted
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not found
   "/profile":
     get:
       summary: Show profile
@@ -521,6 +668,15 @@ components:
       - name
       - color
       - global
+    accessory:
+      allOf:
+      - "$ref": "#/components/idSchemas/withId"
+      - "$ref": "#/components/propertiesSchemas/accessoryProperties"
+      required:
+      - id
+      - name
+      - image_path
+      - body_part
   idSchemas:
     withAuth0Id:
       type: object
@@ -620,6 +776,24 @@ components:
       properties:
         global:
           type: boolean
+    accessoryProperties:
+      type: object
+      properties:
+        name:
+          type: string
+        image_path:
+          type: string
+          pattern: "/[a-z0-9_]+"
+        body_part:
+          type: string
+          enum:
+          - hair
+          - hand
+          - face
+          - neck
+          - torso
+          - legs
+          - feet
 security:
 - BearerToken: []
 servers:
