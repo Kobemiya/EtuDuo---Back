@@ -10,9 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_05_10_095202) do
+ActiveRecord::Schema[7.0].define(version: 2023_05_11_085312) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "accessories", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "image_path", null: false
+    t.integer "body_part", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_accessories_on_name", unique: true
+  end
 
   create_table "profiles", force: :cascade do |t|
     t.datetime "start_work", null: false
