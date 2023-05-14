@@ -7,6 +7,7 @@ Rails.application.routes.draw do
     post '/tags/global', to: "tags#global_create"
   end
   resources :tasks
+  resources :accessories
   get '/user', to: "user#index"
   post '/user', to: "user#create"
   delete '/user', to: "user#destroy"
