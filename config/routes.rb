@@ -15,4 +15,7 @@ Rails.application.routes.draw do
   patch '/user', to: "user#update"
   get '/profile', to: "profile#index"
   put '/profile', to: "profile#update"
+  get '/inventory', to: "inventory#index"
+  put '/inventory/:accessory_id', to: "inventory#add_accessory"
+  delete '/inventory/:accessory_id', to: "inventory#remove_accessory"
 end
