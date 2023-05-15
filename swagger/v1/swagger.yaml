@@ -151,6 +151,59 @@ paths:
           description: Forbidden
         '404':
           description: Not found
+  "/inventory":
+    get:
+      summary: Show inventory
+      tags:
+      - Inventory
+      description: Display the user's inventory, which contains the accessories obtained
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/accessory"
+        '401':
+          description: Unauthorized
+  "/inventory/{accessory_id}":
+    parameters:
+    - name: accessory_id
+      in: path
+      description: accessory_id
+      required: true
+      schema:
+        type: string
+    put:
+      summary: Add accessory in inventory
+      tags:
+      - Inventory
+      description: Add a specified accessory in the user's inventory
+      responses:
+        '204':
+          description: Added
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not found
+        '409':
+          description: Conflict
+    delete:
+      summary: Remove accessory from inventory
+      tags:
+      - Inventory
+      description: Remove a specified accessory from the user's inventory
+      responses:
+        '204':
+          description: Removed
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not found
+        '409':
+          description: Conflict
   "/profile":
     get:
       summary: Show profile

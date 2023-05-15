@@ -26,7 +26,7 @@ class InventoryController < ApplicationController
       @user.accessories.delete(@accessory)
       head :no_content
     else
-      head :not_found
+      head :conflict
     end
   end
 end
