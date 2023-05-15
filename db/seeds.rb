@@ -5,3 +5,11 @@
 #
 #   movies = Movie.create([{ name: "Star Wars" }, { name: "Lord of the Rings" }])
 #   Character.create(name: "Luke", movie: movies.first)
+Tag.create([{ name: "Sport", color: "#000000"}])
+Tag.create([{ name: "Divers", color: "#000000"}])
+Tag.create([{ name: "Cours", color: "#000000"}])
+Tag.create([{ name: "Travail", color: "#000000"}])
+Tag.create([{ name: "Sommeil", color: "#000000"}])
+Tag.create([{ name: "Repas", color: "#000000"}])
+Tag.create([{ name: "Courses", color: "#000000"}])
+Tag.create([{ name: "Musique", color: "#000000"}])

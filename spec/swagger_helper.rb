@@ -53,6 +53,14 @@ RSpec.configure do |config|
               { '$ref' => '#/components/propertiesSchemas/profileProperties' }
             ],
             required: %w[id occupation prod_period start_work end_work start_sleep end_sleep]
+          },
+          tag: {
+            allOf: [
+              { '$ref' => '#/components/idSchemas/withId' },
+              { '$ref' => '#/components/propertiesSchemas/tagProperties' },
+              { '$ref' => '#/components/additionalPropertiesSchemas/tagGlobalProperty' }
+            ],
+            required: %w[id name color global]
           }
         },
         idSchemas: {
@@ -82,6 +90,12 @@ RSpec.configure do |config|
               title: { type: 'string' },
               description: { type: 'string' },
               done: { type: 'boolean' },
+              recurrence: { anyOf: [
+                { type: 'array', items: { type: 'string', enum: %w[monday tuesday wednesday thursday friday saturday ] } },
+                { type: 'string', pattern: 'yearly' }
+              ], nullable: true },
+              tags: { type: 'array', items: { type: 'integer' } },
+              unmovable: { type: 'boolean' },
               start: { type: 'string', format: 'date-time', nullable: true },
               end: { type: 'string', format: 'date-time', nullable: true }
             }
@@ -94,7 +108,22 @@ RSpec.configure do |config|
               start_work: { type: 'string', format: 'date-time' },
               end_work: { type: 'string', format: 'date-time' },
               start_sleep: { type: 'string', format: 'date-time', nullable: true },
-              end_sleep: { type: 'string', format: 'date-time', nullable: true }
+              end_sleep: { type: 'string', format: 'date-time', nullable: true },
+            }
+          },
+          tagProperties: {
+            type: 'object',
+            properties: {
+              name: { type: 'string' },
+              color: { type: 'string', pattern: '#[A-Fa-f0-9]{6}' }
+            }
+          }
+        },
+        additionalPropertiesSchemas: {
+          tagGlobalProperty: {
+            type: 'object',
+            properties: {
+              global: { type: 'boolean' }
             }
           }
         }

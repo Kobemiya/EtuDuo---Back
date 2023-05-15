@@ -19,10 +19,10 @@ class ApplicationController < ActionController::API
     @user = User.find(@token['sub']) if exist
   end
 
-  def check_permissions(permission)
+  def has_permissions(permission)
     permissions = @token['scope'] || []
     permissions = permissions.split if permissions.is_a? String
-    head :forbidden unless permissions.include?(permission)
+    permissions.include?(permission)
   end
 
   private
