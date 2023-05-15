@@ -12,13 +12,21 @@ class InventoryController < ApplicationController
   
   def add_accessory
     @accessory = Accessory.find(params[:accessory_id])
-    @user.accessories |= [@accessory]
-    head :no_content
+    if @user.accessories.where(id: @accessory.id).exists?
+      head :conflict
+    else
+      @user.accessories.append(@accessory)
+      head :no_content
+    end
   end
   
   def remove_accessory
     @accessory = Accessory.find(params[:accessory_id])
-    @user.accessories.delete(@accessory)
-    head :no_content
+    if @user.accessories.where(id: @accessory.id).exists?
+      @user.accessories.delete(@accessory)
+      head :no_content
+    else
+      head :not_found
+    end
   end
 end

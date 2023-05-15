@@ -24,8 +24,11 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_15_083547) do
   end
 
   create_table "accessories_users", id: false, force: :cascade do |t|
-    t.bigint "user_id", null: false
-    t.bigint "accessory_id", null: false
+    t.string "user_id"
+    t.bigint "accessory_id"
+    t.index ["accessory_id"], name: "index_accessories_users_on_accessory_id"
+    t.index ["user_id", "accessory_id"], name: "index_accessories_users_on_user_id_and_accessory_id", unique: true
+    t.index ["user_id"], name: "index_accessories_users_on_user_id"
   end
 
   create_table "profiles", force: :cascade do |t|
@@ -77,6 +80,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_15_083547) do
     t.index ["auth0Id"], name: "index_users_on_auth0Id", unique: true
   end
 
+  add_foreign_key "accessories_users", "accessories"
+  add_foreign_key "accessories_users", "users", primary_key: "auth0Id"
   add_foreign_key "profiles", "users", primary_key: "auth0Id"
   add_foreign_key "tags", "users", primary_key: "auth0Id"
   add_foreign_key "tasks", "users", column: "author_id", primary_key: "auth0Id"
