@@ -33,6 +33,8 @@ class TasksController < ApplicationController
     elsif task[:recurrence].present?
       head :bad_request
     end
+
+    head :bad_request if task[:start].nil? || task[:end].nil? && task[:recurrence].present?
   end
 
   before_action :authorize!
@@ -58,7 +60,29 @@ class TasksController < ApplicationController
   end
 
   def index
+    query_params = request.query_parameters
+    return head :bad_request unless query_params.all? { |scope, _| %w[from to tags].any?(scope) }
+    return head :bad_request if query_params['from'].nil? ^ query_params['to'].nil?
+
     @tasks = @user.tasks
+    return render json: @task if query_params.any?
+
+    acc = []
+    if query_params['from']
+      from = query_params['from']
+      to = query_params['to']
+
+      acc |= [tasks.where("start IS NULL OR start <= :from) AND (tasks.end IS NULL OR tasks.end >= :to)", from: from, to: to)]
+      if query_params[:generate]
+        @tasks.where("recurrence IS NOT NULL").each do |task|
+          if task.recurrence == "yearly"
+            from = task.start.advance(years: 1)
+            to = task.end.advance(years: 1)
+          end
+        end
+      end
+      @tasks = acc
+    end
     render json: @tasks
   end
 
