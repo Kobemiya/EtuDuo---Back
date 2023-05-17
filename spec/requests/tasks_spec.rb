@@ -9,6 +9,9 @@ RSpec.describe 'tasks', type: :request do
       produces 'application/json'
       description 'List all tasks the user has access to'
 
+      parameter name: 'date', in: :query, type: :string, description: 'Permit to ask for the tasks for a specific date',
+                schema: { type: 'string', format: "date-time"}
+
       response(200, 'Successful') do
         schema type: 'array', items: { '$ref' => '#/components/schemas/task' }
         run_test!

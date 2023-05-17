@@ -428,6 +428,14 @@ paths:
       tags:
       - Tasks
       description: List all tasks the user has access to
+      parameters:
+      - name: date
+        in: query
+        type: string
+        description: Permit to ask for the tasks for a specific date
+        schema:
+          type: string
+          format: date-time
       responses:
         '200':
           description: Successful
