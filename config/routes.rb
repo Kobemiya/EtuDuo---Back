@@ -7,6 +7,7 @@ Rails.application.routes.draw do
     post '/tags/global', to: "tags#global_create"
   end
   resources :tasks
+  resources :accessories
   get '/user', to: "user#index"
   post '/user', to: "user#create"
   delete '/user', to: "user#destroy"
@@ -14,4 +15,7 @@ Rails.application.routes.draw do
   patch '/user', to: "user#update"
   get '/profile', to: "profile#index"
   put '/profile', to: "profile#update"
+  get '/inventory', to: "inventory#index"
+  put '/inventory/:accessory_id', to: "inventory#add_accessory"
+  delete '/inventory/:accessory_id', to: "inventory#remove_accessory"
 end

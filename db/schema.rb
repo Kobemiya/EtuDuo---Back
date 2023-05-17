@@ -10,9 +10,26 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_05_10_095202) do
+ActiveRecord::Schema[7.0].define(version: 2023_05_15_083547) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "accessories", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "image_path", null: false
+    t.integer "body_part", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_accessories_on_name", unique: true
+  end
+
+  create_table "accessories_users", id: false, force: :cascade do |t|
+    t.string "user_id"
+    t.bigint "accessory_id"
+    t.index ["accessory_id"], name: "index_accessories_users_on_accessory_id"
+    t.index ["user_id", "accessory_id"], name: "index_accessories_users_on_user_id_and_accessory_id", unique: true
+    t.index ["user_id"], name: "index_accessories_users_on_user_id"
+  end
 
   create_table "profiles", force: :cascade do |t|
     t.datetime "start_work", null: false
@@ -63,6 +80,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_10_095202) do
     t.index ["auth0Id"], name: "index_users_on_auth0Id", unique: true
   end
 
+  add_foreign_key "accessories_users", "accessories"
+  add_foreign_key "accessories_users", "users", primary_key: "auth0Id"
   add_foreign_key "profiles", "users", primary_key: "auth0Id"
   add_foreign_key "tags", "users", primary_key: "auth0Id"
   add_foreign_key "tasks", "users", column: "author_id", primary_key: "auth0Id"
