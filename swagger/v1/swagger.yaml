@@ -831,12 +831,6 @@ components:
         color:
           type: string
           pattern: "#[A-Fa-f0-9]{6}"
-  additionalPropertiesSchemas:
-    tagGlobalProperty:
-      type: object
-      properties:
-        global:
-          type: boolean
     accessoryProperties:
       type: object
       properties:
@@ -844,7 +838,7 @@ components:
           type: string
         image_path:
           type: string
-          pattern: "/[a-z0-9_]+"
+          pattern: "(/[a-z0-9_])+"
         body_part:
           type: string
           enum:
@@ -855,6 +849,12 @@ components:
           - torso
           - legs
           - feet
+  additionalPropertiesSchemas:
+    tagGlobalProperty:
+      type: object
+      properties:
+        global:
+          type: boolean
 security:
 - BearerToken: []
 servers:
