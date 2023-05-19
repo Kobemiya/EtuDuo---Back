@@ -124,6 +124,14 @@ RSpec.configure do |config|
               name: { type: 'string' },
               color: { type: 'string', pattern: '#[A-Fa-f0-9]{6}' }
             }
+          },
+          accessoryProperties: {
+            type: 'object',
+            properties: {
+              name: { type: 'string' },
+              image_path: { type: 'string', pattern: '(/[a-z0-9_])+' },
+              body_part: { type: 'string', enum: %w[hair hand face neck torso legs feet] }
+            }
           }
         },
         additionalPropertiesSchemas: {
@@ -131,14 +139,6 @@ RSpec.configure do |config|
             type: 'object',
             properties: {
               global: { type: 'boolean' }
-            }
-          },
-          accessoryProperties: {
-            type: 'object',
-            properties: {
-              name: { type: 'string' },
-              image_path: { type: 'string', pattern: '/[a-z0-9_]+' },
-              body_part: { type: 'string', enum: %w[hair hand face neck torso legs feet] }
             }
           }
         }
