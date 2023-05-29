@@ -5,10 +5,13 @@ class CompanionController < ApplicationController
     body = params.require(:companion).permit(:hair_id, :face_id, :hands_id, :neck_id, :torso_id, :legs_id, :feet_id, :name, :skin_color)
     head :bad_request if /#[A-Fa-f0-9]{6}/.match(body[:skin_color]).nil?
 
-    %i[hair_id face_id neck_id hands_id torso_id legs_id feet_id].each do |part|
-      next if body[part].nil?
-      head :unprocessable_entity unless Accessory.where(body[part]).exists?
+    %w[hair face neck hands torso legs feet].each do |part|
+      next if body[part + '_id'].nil?
+      head :unprocessable_entity unless Accessory.find(body[part + '_id']).body_part == part
     end
+
+  rescue ActiveRecord::RecordNotFound => e
+    head :unprocessable_entity
   end
 
   before_action :authorize!
