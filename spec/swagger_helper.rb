@@ -130,7 +130,7 @@ RSpec.configure do |config|
             properties: {
               name: { type: 'string' },
               image_path: { type: 'string', pattern: '(/[a-z0-9_])+' },
-              body_part: { type: 'string', enum: %w[hair hand face neck torso legs feet] }
+              body_part: { type: 'string', enum: %w[hair hands face neck torso legs feet] }
             }
           }
         },
