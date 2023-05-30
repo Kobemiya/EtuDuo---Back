@@ -32,11 +32,11 @@ class AccessoriesController < ApplicationController
     render json: @accessory
   end
 
-  def delete
+  def destroy
     return head :forbidden unless has_permissions("delete:accessories")
     @accessory = Accessory.find(params[:id])
     @accessory.destroy
-    head :not_content
+    head :no_content
   end
 
   def update

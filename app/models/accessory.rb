@@ -1,3 +1,3 @@
 class Accessory < ApplicationRecord
-  enum :body_part, [ :hair, :hand, :face, :neck, :torso, :legs, :feet ]
+  enum :body_part, [ :hair, :hands, :face, :neck, :torso, :legs, :feet ]
 end
