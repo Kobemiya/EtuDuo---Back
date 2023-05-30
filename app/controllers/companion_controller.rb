@@ -6,8 +6,10 @@ class CompanionController < ApplicationController
     head :bad_request if /#[A-Fa-f0-9]{6}/.match(body[:skin_color]).nil?
 
     %w[hair face neck hands torso legs feet].each do |part|
-      next if body[part + '_id'].nil?
-      head :unprocessable_entity unless Accessory.find(body[part + '_id']).body_part == part
+      part_id = body[part + '_id']
+      next if part_id.nil?
+      head :unprocessable_entity unless Accessory.find(part_id).body_part == part
+      head :forbidden unless @user.accessories.where(id: part_id).exists?
     end
 
   rescue ActiveRecord::RecordNotFound => e

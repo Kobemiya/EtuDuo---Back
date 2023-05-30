@@ -23,6 +23,12 @@ class InventoryController < ApplicationController
   def remove_accessory
     @accessory = Accessory.find(params[:accessory_id])
     if @user.accessories.where(id: @accessory.id).exists?
+      %w[hair_id face_id neck_id hands_id torso_id legs_id feet_id].each do |part|
+        next unless @user.companion.attributes[part] == @accessory.id
+        @user.companion.write_attribute(part, nil)
+        break if @user.companion.save
+        return head :unprocessable_entity
+      end
       @user.accessories.delete(@accessory)
       head :no_content
     else

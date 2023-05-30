@@ -38,6 +38,7 @@ RSpec.describe 'inventory', type: :request do
       response(401, 'Unauthorized') do run_test! end
       response(404, 'Not found') do run_test! end
       response(409, 'Conflict') do run_test! end
+      response(422, 'Failed to update companion') do run_test! end
     end
   end
 end

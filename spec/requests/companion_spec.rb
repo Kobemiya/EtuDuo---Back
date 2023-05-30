@@ -28,6 +28,7 @@ RSpec.describe "Companions", type: :request do
       end
       response(400, 'Bad Request') do run_test! end
       response(401, 'Unauthorized') do run_test! end
+      response(401, 'Forbidden') do run_test! end
       response(422, 'Unprocessable Entity') do run_test! end
     end
   end

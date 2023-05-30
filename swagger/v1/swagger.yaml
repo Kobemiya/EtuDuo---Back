@@ -151,6 +151,42 @@ paths:
           description: Forbidden
         '404':
           description: Not found
+  "/companion":
+    get:
+      summary: show companion
+      tags:
+      - Companion
+      description: List all companion's accessories and its caracteristics
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/companion"
+        '401':
+          description: Unauthorized
+    put:
+      summary: update companion
+      tags:
+      - Companion
+      description: Modify companion's attributes
+      parameters: []
+      responses:
+        '204':
+          description: Created or Updated
+        '400':
+          description: Bad Request
+        '401':
+          description: Forbidden
+        '422':
+          description: Unprocessable Entity
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/propertiesSchemas/companionProperties"
+        description: Companion's appearance
   "/inventory":
     get:
       summary: Show inventory
@@ -204,6 +240,8 @@ paths:
           description: Not found
         '409':
           description: Conflict
+        '422':
+          description: Failed to update companion
   "/profile":
     get:
       summary: Show profile
@@ -738,6 +776,14 @@ components:
       - name
       - image_path
       - body_part
+    companion:
+      allOf:
+      - "$ref": "#/components/idSchemas/withId"
+      - "$ref": "#/components/propertiesSchemas/companionProperties"
+      required:
+      - id
+      - name
+      - skin_color
   idSchemas:
     withAuth0Id:
       type: object
@@ -843,12 +889,41 @@ components:
           type: string
           enum:
           - hair
-          - hand
+          - hands
           - face
           - neck
           - torso
           - legs
           - feet
+    companionProperties:
+      type: object
+      properties:
+        name:
+          type: string
+        skin_color:
+          type: string
+          pattern: "#[A-Za-z0-9]{6}"
+        hair_id:
+          type: integer
+          nullable: true
+        face_id:
+          type: integer
+          nullable: true
+        neck_id:
+          type: integer
+          nullable: true
+        hands_id:
+          type: integer
+          nullable: true
+        torso_id:
+          type: integer
+          nullable: true
+        legs_id:
+          type: integer
+          nullable: true
+        feet_id:
+          type: integer
+          nullable: true
   additionalPropertiesSchemas:
     tagGlobalProperty:
       type: object
