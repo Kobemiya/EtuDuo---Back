@@ -68,6 +68,13 @@ RSpec.configure do |config|
               { '$ref' => '#/components/propertiesSchemas/accessoryProperties' }
             ],
             required: %w[id name image_path body_part]
+          },
+          companion: {
+            allOf: [
+              { '$ref' => '#/components/idSchemas/withId' },
+              { '$ref' => '#/components/propertiesSchemas/companionProperties' }
+            ],
+            required: %w[id name skin_color]
           }
         },
         idSchemas: {
@@ -131,6 +138,20 @@ RSpec.configure do |config|
               name: { type: 'string' },
               image_path: { type: 'string', pattern: '(/[a-z0-9_])+' },
               body_part: { type: 'string', enum: %w[hair hands face neck torso legs feet] }
+            }
+          },
+          companionProperties: {
+            type: 'object',
+            properties: {
+              name: { type: 'string' },
+              skin_color: { type: 'string', pattern: '#[A-Za-z0-9]{6}' },
+              hair_id: { type: 'integer', nullable: true },
+              face_id: { type: 'integer', nullable: true },
+              neck_id: { type: 'integer', nullable: true },
+              hands_id: { type: 'integer', nullable: true },
+              torso_id: { type: 'integer', nullable: true },
+              legs_id: { type: 'integer', nullable: true },
+              feet_id: { type: 'integer', nullable: true }
             }
           }
         },
