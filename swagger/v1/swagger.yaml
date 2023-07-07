@@ -994,6 +994,7 @@ components:
       allOf:
       - "$ref": "#/components/idSchemas/withId"
       - "$ref": "#/components/propertiesSchemas/roomProperties"
+      - "$ref": "#/components/additionalPropertiesSchemas/roomNeedsPasswordProperty"
       required:
       - id
       - name
@@ -1155,6 +1156,11 @@ components:
         password:
           type: string
           nullable: true
+    roomNeedsPasswordProperty:
+      type: object
+      properties:
+        needs_password:
+          type: boolean
 security:
 - BearerToken: []
 servers:

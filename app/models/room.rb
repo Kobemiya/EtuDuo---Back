@@ -5,6 +5,8 @@ class Room < ApplicationRecord
   has_and_belongs_to_many :users, :join_table => 'rooms_users'
 
   def as_json(options = nil)
-    super.except('author_id', 'password')
+    json = super
+    json['needs_password'] = json['password'].present?
+    json.except('author_id', 'password')
   end
 end

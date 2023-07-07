@@ -76,7 +76,7 @@ class RoomsController < ApplicationController
 
   def enter_room
     @room = Room.find(params[:room_id])
-    if @room.password != params["password"]
+    if @room.password.present? && @room.password != params["password"]
       head :forbidden
     elsif @room.users.exists?(@user.auth0Id)
       head :conflict
@@ -89,7 +89,7 @@ class RoomsController < ApplicationController
   def leave_room
     @room = Room.find(params[:room_id])
     if @room.author_id == @user.auth0Id
-      head :not_allowed
+      head :method_not_allowed
     elsif @room.users.exists?(@user.auth0Id)
       @room.users.delete(@user)
       head :ok

@@ -79,7 +79,8 @@ RSpec.configure do |config|
           room: {
             allOf: [
               { '$ref' => '#/components/idSchemas/withId' },
-              { '$ref' => '#/components/propertiesSchemas/roomProperties' }
+              { '$ref' => '#/components/propertiesSchemas/roomProperties' },
+              { '$ref' => '#/components/additionalPropertiesSchemas/roomNeedsPasswordProperty' }
             ],
             required: %w[id name password]
           }
@@ -179,6 +180,12 @@ RSpec.configure do |config|
             type: 'object',
             properties: {
               password: { type: 'string', nullable: true }
+            }
+          },
+          roomNeedsPasswordProperty: {
+            type: 'object',
+            properties: {
+              needs_password: { type: 'boolean' }
             }
           }
         }
