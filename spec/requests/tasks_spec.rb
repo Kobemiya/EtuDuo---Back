@@ -31,7 +31,7 @@ RSpec.describe 'tasks', type: :request do
                   required: %w[title description done]
                 }
 
-      response(200, 'Created') do
+      response(200, 'Successful') do
         schema '$ref' => '#/components/schemas/task'
         run_test!
       end
@@ -75,7 +75,7 @@ RSpec.describe 'tasks', type: :request do
       description 'Update the task with the providede id'
 
       parameter name: :body, description: 'Task infos', in: :body,
-                schema: {'$ref' => '#/components/propertiesSchemas/taskProperties' }
+                schema: { '$ref' => '#/components/propertiesSchemas/taskProperties' }
 
       response(200, 'Successful') do
         schema '$ref' => '#/components/schemas/task'
@@ -95,7 +95,7 @@ RSpec.describe 'tasks', type: :request do
       description 'Update the task with the providede id'
 
       parameter name: :body, description: 'Task infos', in: :body,
-                schema: {'$ref' => '#/components/propertiesSchemas/taskProperties' }
+                schema: { '$ref' => '#/components/propertiesSchemas/taskProperties' }
 
       response(200, 'Successful') do
         schema '$ref' => '#/components/schemas/task'
