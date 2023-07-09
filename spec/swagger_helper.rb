@@ -75,6 +75,14 @@ RSpec.configure do |config|
               { '$ref' => '#/components/propertiesSchemas/companionProperties' }
             ],
             required: %w[id name skin_color]
+          },
+          room: {
+            allOf: [
+              { '$ref' => '#/components/idSchemas/withId' },
+              { '$ref' => '#/components/propertiesSchemas/roomProperties' },
+              { '$ref' => '#/components/additionalPropertiesSchemas/roomNeedsPasswordProperty' }
+            ],
+            required: %w[id name password]
           }
         },
         idSchemas: {
@@ -153,6 +161,12 @@ RSpec.configure do |config|
               legs_id: { type: 'integer', nullable: true },
               feet_id: { type: 'integer', nullable: true }
             }
+          },
+          roomProperties: {
+            type: 'object',
+            properties: {
+              name: { type: 'string' }
+            }
           }
         },
         additionalPropertiesSchemas: {
@@ -160,6 +174,18 @@ RSpec.configure do |config|
             type: 'object',
             properties: {
               global: { type: 'boolean' }
+            }
+          },
+          roomPasswordProperty: {
+            type: 'object',
+            properties: {
+              password: { type: 'string', nullable: true }
+            }
+          },
+          roomNeedsPasswordProperty: {
+            type: 'object',
+            properties: {
+              needs_password: { type: 'boolean' }
             }
           }
         }

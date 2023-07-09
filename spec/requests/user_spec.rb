@@ -28,7 +28,7 @@ RSpec.describe 'user', type: :request do
                   required: %w[username]
                 }
 
-      response(201, 'Created') do
+      response(200, 'Successful') do
         schema '$ref' => '#/components/schemas/user'
         run_test!
       end

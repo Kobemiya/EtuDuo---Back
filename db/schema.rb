@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_05_29_111040) do
+ActiveRecord::Schema[7.0].define(version: 2023_07_05_180106) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -67,6 +67,23 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_29_111040) do
     t.index ["user_id"], name: "index_profiles_on_user_id"
   end
 
+  create_table "rooms", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "password"
+    t.string "author_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["author_id"], name: "index_rooms_on_author_id"
+  end
+
+  create_table "rooms_users", id: false, force: :cascade do |t|
+    t.string "user_id"
+    t.bigint "room_id"
+    t.index ["room_id"], name: "index_rooms_users_on_room_id"
+    t.index ["user_id", "room_id"], name: "index_rooms_users_on_user_id_and_room_id", unique: true
+    t.index ["user_id"], name: "index_rooms_users_on_user_id"
+  end
+
   create_table "tags", force: :cascade do |t|
     t.string "name", null: false
     t.string "color", null: false
@@ -114,6 +131,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_29_111040) do
   add_foreign_key "companions", "accessories", column: "torso_id", on_delete: :nullify
   add_foreign_key "companions", "users", primary_key: "auth0Id", on_delete: :cascade
   add_foreign_key "profiles", "users", primary_key: "auth0Id", on_delete: :cascade
+  add_foreign_key "rooms", "users", column: "author_id", primary_key: "auth0Id"
+  add_foreign_key "rooms_users", "rooms"
+  add_foreign_key "rooms_users", "users", primary_key: "auth0Id"
   add_foreign_key "tags", "users", primary_key: "auth0Id", on_delete: :cascade
   add_foreign_key "tags_tasks", "tags", on_delete: :cascade
   add_foreign_key "tags_tasks", "tasks", on_delete: :cascade

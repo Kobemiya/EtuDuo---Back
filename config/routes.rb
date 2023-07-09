@@ -11,6 +11,11 @@ Rails.application.routes.draw do
 
   resources :accessories
 
+  resources :rooms
+
+  post '/rooms/enter/:room_id', to: "rooms#enter_room"
+  post '/rooms/leave/:room_id', to: "rooms#leave_room"
+
   get '/user', to: "user#index"
   post '/user', to: "user#create"
   delete '/user', to: "user#destroy"
