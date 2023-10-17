@@ -46,6 +46,7 @@ class WorkflowController < ApplicationController
       puts(task.start)
       task.end = task.start + duration
       delta += duration
+      puts(cover(task, @unmovable_tasks, period))
       while cover(task, @unmovable_tasks, period)
         puts("cover")
         puts(cover(task, @unmovable_tasks, period))
@@ -67,6 +68,12 @@ class WorkflowController < ApplicationController
     @unplaced_tasks.each do |task|
       puts(task)
     end
+    Task.delete(@sleep)
+    Task.delete(@work)
+    @tasks.each do |task|
+      task.unmovable = false
+    end
+    render json: @tasks
   end
 
   def index
@@ -84,14 +91,13 @@ class WorkflowController < ApplicationController
     @work = @unmovable_tasks.where(title: "work")
     @unmovable_tasks.each do |unmovable_task|
       if task.end > unmovable_task.start && task.end < unmovable_task.end || task.start > unmovable_task.start && task.start < unmovable_task.end
-        if period == "after" && unmovable_task.title == "work" || period == "before" && unmovable_task.title == "sleep"
+        if @period == "after" && unmovable_task.title == "work" || @period == "before" && unmovable_task.title == "sleep"
           puts("non")
           return "impossible"
         end
         puts("oui")
         return unmovable_task.end
       end
-      return false
     end
     return false
   end
