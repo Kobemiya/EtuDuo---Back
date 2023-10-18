@@ -27,11 +27,9 @@ class RoomsController < ApplicationController
       @rooms = Room.all
     elsif query_params["already_joined"] == 'true'
       @rooms = @user.joined_rooms
-      print("a")
     elsif query_params["already_joined"] == 'false'
       to_remove = @user.joined_rooms.select { |r| r.id }
       @rooms = Room.where.not(id: to_remove)
-      print("b")
     else
       return head :bad_request
     end
