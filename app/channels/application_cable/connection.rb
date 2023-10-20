@@ -21,7 +21,7 @@ module ApplicationCable
       return reject_unauthorized_connection unless valid
       user = User.find(token['sub'])
       return reject_unauthorized_connection unless user.present?
-      self.user = user
+      @user = user
     end
   end
 end
