@@ -83,4 +83,7 @@ Rails.application.configure do
 
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
+
+  # This might get changed for more security in the future
+  config.action_cable.disable_request_forgery_protection = true
 end
