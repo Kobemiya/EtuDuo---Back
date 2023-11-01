@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_07_05_180106) do
+ActiveRecord::Schema[7.0].define(version: 2023_10_17_141045) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -29,6 +29,19 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_05_180106) do
     t.index ["accessory_id"], name: "index_accessories_users_on_accessory_id"
     t.index ["user_id", "accessory_id"], name: "index_accessories_users_on_user_id_and_accessory_id", unique: true
     t.index ["user_id"], name: "index_accessories_users_on_user_id"
+  end
+
+  create_table "achievements", force: :cascade do |t|
+    t.string "name"
+    t.text "description"
+    t.text "criteria"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "achivements", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "companions", force: :cascade do |t|
@@ -112,6 +125,16 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_05_180106) do
     t.index ["author_id"], name: "index_tasks_on_author_id"
   end
 
+  create_table "user_achievements", force: :cascade do |t|
+    t.string "user_id"
+    t.bigint "achievement_id"
+    t.date "achieved_date"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["achievement_id"], name: "index_user_achievements_on_achievement_id"
+    t.index ["user_id"], name: "index_user_achievements_on_user_id"
+  end
+
   create_table "users", id: false, force: :cascade do |t|
     t.string "auth0Id", null: false
     t.string "username", null: false
@@ -138,4 +161,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_05_180106) do
   add_foreign_key "tags_tasks", "tags", on_delete: :cascade
   add_foreign_key "tags_tasks", "tasks", on_delete: :cascade
   add_foreign_key "tasks", "users", column: "author_id", primary_key: "auth0Id", on_delete: :cascade
+  add_foreign_key "user_achievements", "achievements"
+  add_foreign_key "user_achievements", "users", primary_key: "auth0Id"
 end

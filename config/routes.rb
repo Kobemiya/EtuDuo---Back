@@ -31,4 +31,13 @@ Rails.application.routes.draw do
 
   get '/companion', to: "companion#index"
   put '/companion', to: "companion#update"
+
+  get '/achievements', to: "achievements#index"
+  post '/achievements', to: "achievements#create"
+  get '/achievements/:id', to: "achievements#show"
+  put '/achievements/:id', to: "achievements#update"
+  patch '/achievements/:id', to: "achievements#update"
+  delete '/achievements/:id', to: "achievements#destroy"
+  post '/achievements/:id/grant', to: "achievements#grant"
+  get '/user/achievements', to: "achievements#user_achievements"
 end
