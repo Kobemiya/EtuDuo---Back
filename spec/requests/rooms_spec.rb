@@ -31,7 +31,7 @@ RSpec.describe 'rooms', type: :request do
                     { '$ref' => '#/components/propertiesSchemas/roomProperties' },
                     { '$ref' => '#/components/additionalPropertiesSchemas/roomPasswordProperty'}
                   ],
-                  required: %w[name password]
+                  required: %w[name password capacity]
                 }
 
       response(200, 'Created') do
@@ -133,6 +133,7 @@ RSpec.describe 'rooms', type: :request do
       response(200, 'Successful') do run_test! end
       response(401, 'Unauthorized') do run_test! end
       response(403, 'Wrong password') do run_test! end
+      response(409, 'Room full') do run_test! end
       response(409, 'Already joined') do run_test! end
     end
   end
