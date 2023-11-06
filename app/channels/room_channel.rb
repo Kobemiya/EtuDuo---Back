@@ -3,8 +3,8 @@ class RoomChannel < ApplicationCable::Channel
 
   @@subscribers = {}
 
-  after_subscribe :broadcast_room_status_callback
-  after_unsubscribe :broadcast_room_status_callback
+  after_subscribe :add_subscriber_and_broadcast, unless: :subscription_rejected?
+  after_unsubscribe :remove_subscriber_and_broadcast, unless: :subscription_rejected?
 
   def broadcast_message(room_id, data)
     ActionCable.server.broadcast "room_#{room_id}", {
@@ -14,16 +14,26 @@ class RoomChannel < ApplicationCable::Channel
     }
   end
 
-  def broadcast_room_status_callback
-    sleep(0.1)  # absolutely magnificent fix
-    broadcast_room_status(params[:room_id])
-  end
-
   def broadcast_room_status(room_id)
     ActionCable.server.broadcast "room_#{room_id}", {
       type: "room_status",
       users_connected: @@subscribers[room_id]
     }
+  end
+
+  def add_subscriber_and_broadcast
+    room_id = params[:room_id]
+    sleep(0.1)  # absolutely magnificent fix
+    @@subscribers[room_id] = [] unless @@subscribers.has_key?(room_id)
+    @@subscribers[room_id].append(user.auth0Id)
+    broadcast_room_status(params[:room_id])
+  end
+
+  def remove_subscriber_and_broadcast
+    room_id = params[:room_id]
+    return unless @@subscribers[room_id].present?
+    return @@subscribers.delete(room_id) if @@subscribers[room_id].size == 1
+    @@subscribers[room_id].delete(connection.user.auth0Id)
   end
 
   public
@@ -34,17 +44,7 @@ class RoomChannel < ApplicationCable::Channel
     return reject unless user.joined_rooms.exists?(room_id)
     return reject if @@subscribers.has_key?(room_id) && @@subscribers[room_id].any?(user.auth0Id)
     stream_from "room_#{room_id}"
-    @@subscribers[room_id] = [] unless @@subscribers.has_key?(room_id)
-    @@subscribers[room_id].append(user.auth0Id)
   end
-
-  def unsubscribed
-    room_id = params[:room_id]
-    return unless @@subscribers[room_id].present?
-    return @@subscribers.delete(room_id) if @@subscribers[room_id].size == 1
-    @@subscribers[room_id].delete(connection.user.auth0Id)
-  end
-
 
   def receive(data)
     room_id = params[:room_id]
