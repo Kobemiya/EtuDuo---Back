@@ -32,8 +32,8 @@ class RoomChannel < ApplicationCable::Channel
   def remove_subscriber_and_broadcast
     room_id = params[:room_id]
     return unless @@subscribers[room_id].present?
-    return @@subscribers.delete(room_id) if @@subscribers[room_id].size == 1
     @@subscribers[room_id].delete(connection.user.auth0Id)
+    broadcast_room_status(params[:room_id])
   end
 
   public
