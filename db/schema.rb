@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_11_03_040348) do
+ActiveRecord::Schema[7.0].define(version: 2023_11_07_041207) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -57,11 +57,15 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_03_040348) do
     t.string "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "mouth_id"
+    t.bigint "eyes_id"
+    t.index ["eyes_id"], name: "index_companions_on_eyes_id"
     t.index ["face_id"], name: "index_companions_on_face_id"
     t.index ["feet_id"], name: "index_companions_on_feet_id"
     t.index ["hair_id"], name: "index_companions_on_hair_id"
     t.index ["hands_id"], name: "index_companions_on_hands_id"
     t.index ["legs_id"], name: "index_companions_on_legs_id"
+    t.index ["mouth_id"], name: "index_companions_on_mouth_id"
     t.index ["neck_id"], name: "index_companions_on_neck_id"
     t.index ["torso_id"], name: "index_companions_on_torso_id"
     t.index ["user_id"], name: "index_companions_on_user_id"
@@ -146,11 +150,13 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_03_040348) do
 
   add_foreign_key "accessories_users", "accessories", on_delete: :cascade
   add_foreign_key "accessories_users", "users", primary_key: "auth0Id", on_delete: :cascade
+  add_foreign_key "companions", "accessories", column: "eyes_id", on_delete: :nullify
   add_foreign_key "companions", "accessories", column: "face_id", on_delete: :nullify
   add_foreign_key "companions", "accessories", column: "feet_id", on_delete: :nullify
   add_foreign_key "companions", "accessories", column: "hair_id", on_delete: :nullify
   add_foreign_key "companions", "accessories", column: "hands_id", on_delete: :nullify
   add_foreign_key "companions", "accessories", column: "legs_id", on_delete: :nullify
+  add_foreign_key "companions", "accessories", column: "mouth_id", on_delete: :nullify
   add_foreign_key "companions", "accessories", column: "neck_id", on_delete: :nullify
   add_foreign_key "companions", "accessories", column: "torso_id", on_delete: :nullify
   add_foreign_key "companions", "users", primary_key: "auth0Id", on_delete: :cascade
