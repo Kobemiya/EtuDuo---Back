@@ -337,6 +337,7 @@ paths:
               required:
               - name
               - password
+              - capacity
         description: Rooms infos
   "/rooms/{id}":
     parameters:
@@ -994,11 +995,13 @@ components:
       allOf:
       - "$ref": "#/components/idSchemas/withId"
       - "$ref": "#/components/propertiesSchemas/roomProperties"
+      - "$ref": "#/components/additionalPropertiesSchemas/roomUserCountProperty"
       - "$ref": "#/components/additionalPropertiesSchemas/roomNeedsPasswordProperty"
       required:
       - id
       - name
       - password
+      - capacity
   idSchemas:
     withAuth0Id:
       type: object
@@ -1144,6 +1147,8 @@ components:
       properties:
         name:
           type: string
+        capacity:
+          type: integer
   additionalPropertiesSchemas:
     tagGlobalProperty:
       type: object
@@ -1156,6 +1161,11 @@ components:
         password:
           type: string
           nullable: true
+    roomUserCountProperty:
+      type: object
+      properties:
+        user_count:
+          type: integer
     roomNeedsPasswordProperty:
       type: object
       properties:
