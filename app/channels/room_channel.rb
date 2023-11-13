@@ -15,9 +15,17 @@ class RoomChannel < ApplicationCable::Channel
   end
 
   def broadcast_room_status(room_id)
+    users_connected = {}
+    @@subscribers[room_id].each do |user_id|
+      user = User.find(user_id)
+      users_connected[user.auth0Id] = {
+        username: user.username,
+        companion: user.companion.as_json
+      }
+    end
     ActionCable.server.broadcast "room_#{room_id}", {
       type: "room_status",
-      users_connected: @@subscribers[room_id]
+      users_connected: users_connected
     }
   end
 

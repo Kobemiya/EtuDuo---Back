@@ -28,7 +28,7 @@ class CompanionController < ApplicationController
   end
 
   def update
-    body = params.require(:companion).permit(:hair_id, :face_id, :hands_id, :neck_id, :torso_id, :legs_id, :feet_id, :name, :skin_color)
+    body = params.require(:companion).permit(:hair_id, :face_id, :hands_id, :neck_id, :torso_id, :legs_id, :feet_id, :mouth_id, :eyes_id, :name, :skin_color)
     @companion = Companion.new(body)
     @companion.user_id = @user.auth0Id
     old_companion = @user.companion

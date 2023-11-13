@@ -114,7 +114,7 @@ RSpec.configure do |config|
               description: { type: 'string' },
               done: { type: 'boolean' },
               recurrence: { anyOf: [
-                { type: 'array', items: { type: 'string', enum: %w[monday tuesday wednesday thursday friday saturday ] } },
+                { type: 'array', items: { type: 'string', enum: %w[monday tuesday wednesday thursday friday saturday] } },
                 { type: 'string', pattern: 'yearly' }
               ], nullable: true },
               tags: { type: 'array', items: { type: 'integer' } },
@@ -146,7 +146,7 @@ RSpec.configure do |config|
             properties: {
               name: { type: 'string' },
               image_path: { type: 'string', pattern: '(/[a-z0-9_])+' },
-              body_part: { type: 'string', enum: %w[hair hands face neck torso legs feet] }
+              body_part: { type: 'string', enum: %w[hair hands face neck torso legs feet mouth eyes] }
             }
           },
           companionProperties: {
@@ -160,7 +160,9 @@ RSpec.configure do |config|
               hands_id: { type: 'integer', nullable: true },
               torso_id: { type: 'integer', nullable: true },
               legs_id: { type: 'integer', nullable: true },
-              feet_id: { type: 'integer', nullable: true }
+              feet_id: { type: 'integer', nullable: true },
+              eyes_id: { type: 'integer', nullable: true },
+              mouth_id: { type: 'integer', nullable: true }
             }
           },
           roomProperties: {
