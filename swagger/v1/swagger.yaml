@@ -457,7 +457,7 @@ paths:
         '403':
           description: Wrong password
         '409':
-          description: Already joined
+          description: Room full
       requestBody:
         content:
           application/json:
@@ -487,10 +487,6 @@ paths:
           description: Successful
         '401':
           description: Unauthorized
-        '405':
-          description: Host not allowed to leave
-        '409':
-          description: Already left
   "/tasks/tags":
     get:
       summary: List tags
