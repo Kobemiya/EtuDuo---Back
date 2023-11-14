@@ -15,6 +15,8 @@ module ApplicationCable
 
     public
 
+    attr_reader :message
+
     def connect
       return reject_unauthorized_connection unless request.headers['Authorization'].present?
       valid, token = verify(request.headers['Authorization'].split.last)
@@ -22,6 +24,11 @@ module ApplicationCable
       user = User.find(token['sub'])
       return reject_unauthorized_connection unless user.present?
       @user = user
+    end
+
+    def receive(websocket_message)
+      super
+      @message = JSON(websocket_message)
     end
   end
 end
