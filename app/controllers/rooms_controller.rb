@@ -78,7 +78,7 @@ class RoomsController < ApplicationController
   def enter_room
     @room = Room.find(params[:room_id])
     if @room.users.exists?(@user.auth0Id)
-      render status: :conflict, json: { error: "Already joined", description: "Room is already joined" }
+      head :ok
     elsif @room.capacity <= @room.users.length
       render status: :conflict, json: { error: "Room full", description: "Room is already full" }
     elsif @room.password.present? && @room.password != params[:password]
@@ -91,13 +91,7 @@ class RoomsController < ApplicationController
 
   def leave_room
     @room = Room.find(params[:room_id])
-    if @room.author_id == @user.auth0Id
-      head :method_not_allowed
-    elsif @room.users.exists?(@user.auth0Id)
-      @room.users.delete(@user)
-      head :ok
-    else
-      head :conflict
-    end
+    @room.users.delete(@user) if @room.users.exists?(@user.auth0Id)
+    head :ok
   end
 end

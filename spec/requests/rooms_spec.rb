@@ -134,7 +134,6 @@ RSpec.describe 'rooms', type: :request do
       response(401, 'Unauthorized') do run_test! end
       response(403, 'Wrong password') do run_test! end
       response(409, 'Room full') do run_test! end
-      response(409, 'Already joined') do run_test! end
     end
   end
 
@@ -147,8 +146,6 @@ RSpec.describe 'rooms', type: :request do
 
       response(200, 'Successful') do run_test! end
       response(401, 'Unauthorized') do run_test! end
-      response(405, 'Host not allowed to leave') do run_test! end
-      response(409, 'Already left') do run_test! end
     end
   end
 end
