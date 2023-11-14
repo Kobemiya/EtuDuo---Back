@@ -32,14 +32,12 @@ class RoomChannel < ApplicationCable::Channel
   def add_subscriber_and_broadcast
     room_id = params[:room_id]
     sleep(0.1)  # absolutely magnificent fix
-    @@subscribers[room_id] = [] unless @@subscribers.has_key?(room_id)
     @@subscribers[room_id].append(user.auth0Id)
     broadcast_room_status(params[:room_id])
   end
 
   def remove_subscriber_and_broadcast
     room_id = params[:room_id]
-    return unless @@subscribers[room_id].present?
     @@subscribers[room_id].delete(connection.user.auth0Id)
     broadcast_room_status(params[:room_id])
   end
@@ -49,8 +47,9 @@ class RoomChannel < ApplicationCable::Channel
   def subscribed
     room_id = params[:room_id]
     user = connection.user
+    @@subscribers[room_id] = [] unless @@subscribers.has_key?(room_id)
     return reject unless user.joined_rooms.exists?(room_id)
-    return reject if @@subscribers.has_key?(room_id) && @@subscribers[room_id].any?(user.auth0Id)
+    return reject if @@subscribers[room_id].any?(user.auth0Id)
     stream_from "room_#{room_id}"
   end
 
