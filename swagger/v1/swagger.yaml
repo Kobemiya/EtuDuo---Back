@@ -435,58 +435,6 @@ paths:
           description: Forbidden
         '404':
           description: Not Found
-  "/rooms/enter/{room_id}":
-    parameters:
-    - name: room_id
-      in: path
-      description: room_id
-      required: true
-      schema:
-        type: integer
-    post:
-      summary: enter room
-      tags:
-      - Rooms
-      description: Enter room using id and password
-      parameters: []
-      responses:
-        '200':
-          description: Successful
-        '401':
-          description: Unauthorized
-        '403':
-          description: Wrong password
-        '409':
-          description: Room full
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                password:
-                  type: string
-              required:
-              - password
-        description: Identification info
-  "/rooms/leave/{room_id}":
-    parameters:
-    - name: room_id
-      in: path
-      description: room_id
-      required: true
-      schema:
-        type: integer
-    post:
-      summary: leave room
-      tags:
-      - Rooms
-      description: Leave room using id
-      responses:
-        '200':
-          description: Successful
-        '401':
-          description: Unauthorized
   "/tasks/tags":
     get:
       summary: List tags
@@ -991,7 +939,6 @@ components:
       allOf:
       - "$ref": "#/components/idSchemas/withId"
       - "$ref": "#/components/propertiesSchemas/roomProperties"
-      - "$ref": "#/components/additionalPropertiesSchemas/roomUserCountProperty"
       - "$ref": "#/components/additionalPropertiesSchemas/roomNeedsPasswordProperty"
       required:
       - id
@@ -1165,11 +1112,6 @@ components:
         password:
           type: string
           nullable: true
-    roomUserCountProperty:
-      type: object
-      properties:
-        user_count:
-          type: integer
     roomNeedsPasswordProperty:
       type: object
       properties:
