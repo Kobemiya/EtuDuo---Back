@@ -77,12 +77,12 @@ class RoomsController < ApplicationController
 
   def enter_room
     @room = Room.find(params[:room_id])
-    if @room.capacity <= @room.users.length
-      render status: :conflict, json: { error: "Room full", description: "Room is already full" }
-    elsif @room.password.present? && @room.password != params["password"]
-      head :forbidden
-    elsif @room.users.exists?(@user.auth0Id)
+    if @room.users.exists?(@user.auth0Id)
       render status: :conflict, json: { error: "Already joined", description: "Room is already joined" }
+    elsif @room.capacity <= @room.users.length
+      render status: :conflict, json: { error: "Room full", description: "Room is already full" }
+    elsif @room.password.present? && @room.password != params[:password]
+      head :forbidden
     else
       @user.joined_rooms.append(@room)
       head :ok
