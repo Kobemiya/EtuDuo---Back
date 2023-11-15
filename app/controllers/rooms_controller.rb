@@ -22,18 +22,7 @@ class RoomsController < ApplicationController
 
   public
   def index
-    query_params = request.query_parameters
-    if query_params["already_joined"].nil?
-      @rooms = Room.all
-    elsif query_params["already_joined"] == 'true'
-      @rooms = @user.joined_rooms
-    elsif query_params["already_joined"] == 'false'
-      to_remove = @user.joined_rooms.select { |r| r.id }
-      @rooms = Room.where.not(id: to_remove)
-    else
-      return head :bad_request
-    end
-    render json: @rooms
+    render json: Room.all
   end
 
   def show
@@ -49,7 +38,6 @@ class RoomsController < ApplicationController
       head :bad_request
     end
     if @room.save
-      @user.joined_rooms.append(@room)
       render json: @room
     else
       head :unprocessable_entity

@@ -7,10 +7,7 @@ RSpec.describe 'rooms', type: :request do
     get('list rooms') do
       tags 'Rooms'
       produces 'application/json'
-      description 'List all rooms with filters'
-
-      parameter name: 'already_joined', in: :query, type: :boolean, description: 'Permits to filter between joined rooms and not',
-                schema: { type: 'boolean'}
+      description 'List all rooms'
 
       response(200, 'Successful') do
         schema type: 'array', items: { '$ref' => '#/components/schemas/room' }
