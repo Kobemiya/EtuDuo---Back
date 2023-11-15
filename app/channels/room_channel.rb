@@ -32,25 +32,48 @@ class RoomChannel < ApplicationCable::Channel
   def add_subscriber_and_broadcast
     room_id = params[:room_id]
     sleep(0.1)  # absolutely magnificent fix
-    @@subscribers[room_id] = [] unless @@subscribers.has_key?(room_id)
     @@subscribers[room_id].append(user.auth0Id)
-    broadcast_room_status(params[:room_id])
+    broadcast_room_status(room_id)
   end
 
   def remove_subscriber_and_broadcast
     room_id = params[:room_id]
-    return unless @@subscribers[room_id].present?
     @@subscribers[room_id].delete(connection.user.auth0Id)
-    broadcast_room_status(params[:room_id])
+    broadcast_room_status(room_id)
   end
 
   public
 
   def subscribed
     room_id = params[:room_id]
+    room = Room.find_by(id: room_id)
     user = connection.user
-    return reject unless user.joined_rooms.exists?(room_id)
-    return reject if @@subscribers.has_key?(room_id) && @@subscribers[room_id].any?(user.auth0Id)
+    received_data = connection.message["data"]
+    received_identifier = connection.message["identifier"]
+
+    unless room.present?
+      connection.transmit({ type: "rejection_info", identifier: received_identifier, reason: "Room does not exist" })
+      reject
+      return
+    end
+
+    @@subscribers[room_id] = [] unless @@subscribers.has_key?(room_id)
+    if @@subscribers[room_id].any?(user.auth0Id)
+      connection.transmit({ type: "rejection_info", identifier: received_identifier, reason: "Already connected" })
+      reject
+      return
+    end
+    unless @@subscribers[room_id].length < room.capacity
+      connection.transmit({ type: "rejection_info", identifier: received_identifier, reason: "Room is full" })
+      reject
+      return
+    end
+    unless room.password.nil? || received_data.present? && received_data["password"] == room.password
+      connection.transmit({ type: "rejection_info", identifier: received_identifier, reason: "Wrong password" })
+      reject
+      return
+    end
+
     stream_from "room_#{room_id}"
   end
 

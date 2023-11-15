@@ -22,18 +22,7 @@ class RoomsController < ApplicationController
 
   public
   def index
-    query_params = request.query_parameters
-    if query_params["already_joined"].nil?
-      @rooms = Room.all
-    elsif query_params["already_joined"] == 'true'
-      @rooms = @user.joined_rooms
-    elsif query_params["already_joined"] == 'false'
-      to_remove = @user.joined_rooms.select { |r| r.id }
-      @rooms = Room.where.not(id: to_remove)
-    else
-      return head :bad_request
-    end
-    render json: @rooms
+    render json: Room.all
   end
 
   def show
@@ -49,7 +38,6 @@ class RoomsController < ApplicationController
       head :bad_request
     end
     if @room.save
-      @user.joined_rooms.append(@room)
       render json: @room
     else
       head :unprocessable_entity
@@ -73,31 +61,5 @@ class RoomsController < ApplicationController
     @room = Room.find(params[:id])
     @room.destroy
     head :no_content
-  end
-
-  def enter_room
-    @room = Room.find(params[:room_id])
-    if @room.capacity <= @room.users.length
-      render status: :conflict, json: { error: "Room full", description: "Room is already full" }
-    elsif @room.password.present? && @room.password != params["password"]
-      head :forbidden
-    elsif @room.users.exists?(@user.auth0Id)
-      render status: :conflict, json: { error: "Already joined", description: "Room is already joined" }
-    else
-      @user.joined_rooms.append(@room)
-      head :ok
-    end
-  end
-
-  def leave_room
-    @room = Room.find(params[:room_id])
-    if @room.author_id == @user.auth0Id
-      head :method_not_allowed
-    elsif @room.users.exists?(@user.auth0Id)
-      @room.users.delete(@user)
-      head :ok
-    else
-      head :conflict
-    end
   end
 end

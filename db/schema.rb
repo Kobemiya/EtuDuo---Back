@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_11_07_041207) do
+ActiveRecord::Schema[7.0].define(version: 2023_11_14_233414) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -94,14 +94,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_07_041207) do
     t.index ["author_id"], name: "index_rooms_on_author_id"
   end
 
-  create_table "rooms_users", id: false, force: :cascade do |t|
-    t.string "user_id"
-    t.bigint "room_id"
-    t.index ["room_id"], name: "index_rooms_users_on_room_id"
-    t.index ["user_id", "room_id"], name: "index_rooms_users_on_user_id_and_room_id", unique: true
-    t.index ["user_id"], name: "index_rooms_users_on_user_id"
-  end
-
   create_table "tags", force: :cascade do |t|
     t.string "name", null: false
     t.string "color", null: false
@@ -130,14 +122,14 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_07_041207) do
     t.index ["author_id"], name: "index_tasks_on_author_id"
   end
 
-  create_table "user_achievements", force: :cascade do |t|
+  create_table "user_achievement", force: :cascade do |t|
     t.string "user_id"
     t.bigint "achievement_id"
     t.date "achieved_date"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["achievement_id"], name: "index_user_achievements_on_achievement_id"
-    t.index ["user_id"], name: "index_user_achievements_on_user_id"
+    t.index ["achievement_id"], name: "index_user_achievement_on_achievement_id"
+    t.index ["user_id"], name: "index_user_achievement_on_user_id"
   end
 
   create_table "users", id: false, force: :cascade do |t|
@@ -162,12 +154,10 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_07_041207) do
   add_foreign_key "companions", "users", primary_key: "auth0Id", on_delete: :cascade
   add_foreign_key "profiles", "users", primary_key: "auth0Id", on_delete: :cascade
   add_foreign_key "rooms", "users", column: "author_id", primary_key: "auth0Id"
-  add_foreign_key "rooms_users", "rooms"
-  add_foreign_key "rooms_users", "users", primary_key: "auth0Id"
   add_foreign_key "tags", "users", primary_key: "auth0Id", on_delete: :cascade
   add_foreign_key "tags_tasks", "tags", on_delete: :cascade
   add_foreign_key "tags_tasks", "tasks", on_delete: :cascade
   add_foreign_key "tasks", "users", column: "author_id", primary_key: "auth0Id", on_delete: :cascade
-  add_foreign_key "user_achievements", "achievements"
-  add_foreign_key "user_achievements", "users", primary_key: "auth0Id"
+  add_foreign_key "user_achievement", "achievements"
+  add_foreign_key "user_achievement", "users", primary_key: "auth0Id"
 end

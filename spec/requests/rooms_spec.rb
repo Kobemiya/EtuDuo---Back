@@ -7,10 +7,7 @@ RSpec.describe 'rooms', type: :request do
     get('list rooms') do
       tags 'Rooms'
       produces 'application/json'
-      description 'List all rooms with filters'
-
-      parameter name: 'already_joined', in: :query, type: :boolean, description: 'Permits to filter between joined rooms and not',
-                schema: { type: 'boolean'}
+      description 'List all rooms'
 
       response(200, 'Successful') do
         schema type: 'array', items: { '$ref' => '#/components/schemas/room' }
@@ -116,39 +113,6 @@ RSpec.describe 'rooms', type: :request do
       response(401, 'Unauthorized') do run_test! end
       response(403, 'Forbidden') do run_test! end
       response(404, 'Not Found') do run_test! end
-    end
-  end
-
-  path '/rooms/enter/{room_id}' do
-    parameter name: 'room_id', in: :path, type: :integer, description: 'room_id'
-
-    post('enter room') do
-      tags 'Rooms'
-      consumes 'application/json'
-      description 'Enter room using id and password'
-
-      parameter name: :body, description: 'Identification info', in: :body,
-                schema: { type: 'object', properties: { password: { type: 'string' } }, required: %w[password] }
-
-      response(200, 'Successful') do run_test! end
-      response(401, 'Unauthorized') do run_test! end
-      response(403, 'Wrong password') do run_test! end
-      response(409, 'Room full') do run_test! end
-      response(409, 'Already joined') do run_test! end
-    end
-  end
-
-  path '/rooms/leave/{room_id}' do
-    parameter name: 'room_id', in: :path, type: :integer, description: 'room_id'
-
-    post('leave room') do
-      tags 'Rooms'
-      description 'Leave room using id'
-
-      response(200, 'Successful') do run_test! end
-      response(401, 'Unauthorized') do run_test! end
-      response(405, 'Host not allowed to leave') do run_test! end
-      response(409, 'Already left') do run_test! end
     end
   end
 end
