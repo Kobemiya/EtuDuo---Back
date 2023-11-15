@@ -289,14 +289,7 @@ paths:
       summary: list rooms
       tags:
       - Rooms
-      description: List all rooms with filters
-      parameters:
-      - name: already_joined
-        in: query
-        type: boolean
-        description: Permits to filter between joined rooms and not
-        schema:
-          type: boolean
+      description: List all rooms
       responses:
         '200':
           description: Successful
