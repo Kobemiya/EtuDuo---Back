@@ -33,16 +33,13 @@ class RoomChannel < ApplicationCable::Channel
     room_id = params[:room_id]
     sleep(0.1)  # absolutely magnificent fix
     @@subscribers[room_id].append(user.auth0Id)
-    broadcast_room_status(params[:room_id])
+    broadcast_room_status(room_id)
   end
 
   def remove_subscriber_and_broadcast
     room_id = params[:room_id]
-    user = connection.user
-    room = Room.find(room_id)
-    room.users.delete(user) if room.users.exists?(user.auth0Id)
     @@subscribers[room_id].delete(connection.user.auth0Id)
-    broadcast_room_status(params[:room_id])
+    broadcast_room_status(room_id)
   end
 
   public
@@ -76,6 +73,7 @@ class RoomChannel < ApplicationCable::Channel
       reject
       return
     end
+
     stream_from "room_#{room_id}"
   end
 
