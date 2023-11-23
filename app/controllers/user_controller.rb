@@ -8,6 +8,7 @@ class UserController < ApplicationController
     user_params['auth0Id'] = @token['sub']
     @user = User.new(user_params)
     @user.companion = Companion.new(name: "#{@user.username}'s companion'", skin_color: "#FFFFFF")
+    @user.stat = Stat.new(user_id: @user.auth0Id, tasks_done: 0, tasks_created: 0)
     if @user.save
       render json: @user
     else

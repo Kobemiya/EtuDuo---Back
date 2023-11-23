@@ -48,6 +48,11 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_02_223020) do
     t.string "image_path", null: false
   end
 
+  create_table "achivements", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "companions", force: :cascade do |t|
     t.string "name", null: false
     t.string "skin_color", null: false
@@ -78,6 +83,15 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_02_223020) do
     t.datetime "updated_at", null: false
     t.integer "capacity", null: false
     t.index ["author_id"], name: "index_rooms_on_author_id"
+  end
+
+  create_table "stats", force: :cascade do |t|
+    t.string "user_id", null: false
+    t.integer "tasks_done"
+    t.integer "tasks_created"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_stats_on_user_id"
   end
 
   create_table "tags", force: :cascade do |t|
@@ -133,6 +147,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_02_223020) do
   add_foreign_key "companions", "users", primary_key: "auth0Id", on_delete: :cascade
   add_foreign_key "profiles", "users", primary_key: "auth0Id", on_delete: :cascade
   add_foreign_key "rooms", "users", column: "author_id", primary_key: "auth0Id", on_delete: :cascade
+  add_foreign_key "stats", "users", primary_key: "auth0Id", on_delete: :cascade
   add_foreign_key "tags", "users", primary_key: "auth0Id", on_delete: :cascade
   add_foreign_key "tags_tasks", "tags", on_delete: :cascade
   add_foreign_key "tags_tasks", "tasks", on_delete: :cascade
