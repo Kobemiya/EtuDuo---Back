@@ -52,6 +52,12 @@ class TasksController < ApplicationController
     @task = Task.new(task)
     @task.author_id = @user.auth0Id
     if @task.save
+      @user.stat.tasks_created += 1
+      @user.update(stat: @user.stat)
+      if @user.stat.tasks_created == 10
+        @user_achievement = UserAchievement.new(user: @user, achievement: Achievement.find_by(id: 1), achieved_date: Date.today)
+        @user_achievement.save
+      end
       render json: @task
     else
       head :unprocessable_entity
@@ -108,6 +114,10 @@ class TasksController < ApplicationController
 
   def update
     @task = Task.find(params[:id])
+    if @task.done != get_params[:done]
+      @user.stat.tasks_done += 1
+      @user.update(stat: @user.stat)
+    end
     if @task.update(get_params)
       render json: @task
     else
