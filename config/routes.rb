@@ -31,6 +31,8 @@ Rails.application.routes.draw do
 
   get '/companion', to: "companion#index"
   put '/companion', to: "companion#update"
+  put '/companion/:accessory_id', to: "companion#equip_accessory"
+  delete '/companion/:accessory_id', to: "companion#unequip_accessory"
 
   get '/achievements', to: "achievements#index"
   post '/achievements', to: "achievements#create"
