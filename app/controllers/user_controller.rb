@@ -7,6 +7,7 @@ class UserController < ApplicationController
     user_params = params.require(:user).permit(:username)
     user_params['auth0Id'] = @token['sub']
     @user = User.new(user_params)
+    @user.companion = Companion.new(name: "#{@user.username}'s companion'", skin_color: "#FFFFFF")
     if @user.save
       render json: @user
     else

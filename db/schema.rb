@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_11_25_104313) do
+ActiveRecord::Schema[7.0].define(version: 2023_11_25_110356) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -136,7 +136,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_25_104313) do
   add_foreign_key "accessories_users", "users", primary_key: "auth0Id", on_delete: :cascade
   add_foreign_key "companions", "users", primary_key: "auth0Id", on_delete: :cascade
   add_foreign_key "profiles", "users", primary_key: "auth0Id", on_delete: :cascade
-  add_foreign_key "rooms", "users", column: "author_id", primary_key: "auth0Id"
+  add_foreign_key "rooms", "users", column: "author_id", primary_key: "auth0Id", on_delete: :cascade
   add_foreign_key "tags", "users", primary_key: "auth0Id", on_delete: :cascade
   add_foreign_key "tags_tasks", "tags", on_delete: :cascade
   add_foreign_key "tags_tasks", "tasks", on_delete: :cascade
