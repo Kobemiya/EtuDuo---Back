@@ -31,5 +31,30 @@ RSpec.describe "Companions", type: :request do
       response(401, 'Forbidden') do run_test! end
       response(422, 'Unprocessable Entity') do run_test! end
     end
+
+    path '/companion/{accessory_id}' do
+      parameter name: 'accessory_id', in: :path, type: :string, description: 'accessory_id'
+
+      put('Equip accessory') do
+        tags 'Companion'
+        description 'Add accessory on companion'
+
+        response(204, 'Equipped') do run_test! end
+        response(401, 'Unauthorized') do run_test! end
+        response(403, 'Forbidden') do run_test! end
+        response(404, 'Not found') do run_test! end
+        response(409, 'Conflict') do run_test! end
+      end
+
+      delete('Unequip accessory') do
+        tags 'Companion'
+        description 'Remove accessory from companion'
+
+        response(204, 'Unequipped') do run_test! end
+        response(401, 'Unauthorized') do run_test! end
+        response(404, 'Not found') do run_test! end
+        response(409, 'Conflict') do run_test! end
+      end
+    end
   end
 end

@@ -72,7 +72,8 @@ RSpec.configure do |config|
           companion: {
             allOf: [
               { '$ref' => '#/components/idSchemas/withId' },
-              { '$ref' => '#/components/propertiesSchemas/companionProperties' }
+              { '$ref' => '#/components/propertiesSchemas/companionProperties' },
+              { '$ref' => '#/components/additionalPropertiesSchemas/companionAccessoriesProperty' }
             ],
             required: %w[id name skin_color]
           },
@@ -152,16 +153,7 @@ RSpec.configure do |config|
             type: 'object',
             properties: {
               name: { type: 'string' },
-              skin_color: { type: 'string', pattern: '#[A-Za-z0-9]{6}' },
-              hair_id: { type: 'integer', nullable: true },
-              face_id: { type: 'integer', nullable: true },
-              neck_id: { type: 'integer', nullable: true },
-              hands_id: { type: 'integer', nullable: true },
-              torso_id: { type: 'integer', nullable: true },
-              legs_id: { type: 'integer', nullable: true },
-              feet_id: { type: 'integer', nullable: true },
-              eyes_id: { type: 'integer', nullable: true },
-              mouth_id: { type: 'integer', nullable: true }
+              skin_color: { type: 'string', pattern: '#[A-Za-z0-9]{6}' }
             }
           },
           roomProperties: {
@@ -189,6 +181,12 @@ RSpec.configure do |config|
             type: 'object',
             properties: {
               needs_password: { type: 'boolean' }
+            }
+          },
+          companionAccessoriesProperty: {
+            type: 'object',
+            properties: {
+              accessories: { type: 'array', items: { '$ref' => '#/components/schemas/accessory' } }
             }
           }
         }
