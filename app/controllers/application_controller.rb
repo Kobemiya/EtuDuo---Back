@@ -20,7 +20,7 @@ class ApplicationController < ActionController::API
   end
 
   def has_permissions(permission)
-    permissions = @token['scope'] || []
+    permissions = @token['permissions'] || []
     permissions = permissions.split if permissions.is_a? String
     permissions.include?(permission)
   end
