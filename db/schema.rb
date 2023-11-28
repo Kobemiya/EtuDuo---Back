@@ -48,11 +48,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_02_223020) do
     t.string "image_path", null: false
   end
 
-  create_table "achivements", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
   create_table "companions", force: :cascade do |t|
     t.string "name", null: false
     t.string "skin_color", null: false
