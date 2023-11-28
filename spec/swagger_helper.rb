@@ -80,9 +80,10 @@ RSpec.configure do |config|
             allOf: [
               { '$ref' => '#/components/idSchemas/withId' },
               { '$ref' => '#/components/propertiesSchemas/roomProperties' },
+              { '$ref' => '#/components/additionalPropertiesSchemas/roomUserCountProperty' },
               { '$ref' => '#/components/additionalPropertiesSchemas/roomNeedsPasswordProperty' }
             ],
-            required: %w[id name password]
+            required: %w[id name password capacity]
           }
         },
         idSchemas: {
@@ -165,7 +166,8 @@ RSpec.configure do |config|
           roomProperties: {
             type: 'object',
             properties: {
-              name: { type: 'string' }
+              name: { type: 'string' },
+              capacity: { type: 'integer' }
             }
           }
         },
@@ -180,6 +182,12 @@ RSpec.configure do |config|
             type: 'object',
             properties: {
               password: { type: 'string', nullable: true }
+            }
+          },
+          roomUserCountProperty: {
+            type: 'object',
+            properties: {
+              user_count: { type: 'integer' }
             }
           },
           roomNeedsPasswordProperty: {

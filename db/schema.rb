@@ -86,6 +86,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_07_135530) do
     t.string "author_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "capacity", null: false
     t.index ["author_id"], name: "index_rooms_on_author_id"
   end
 

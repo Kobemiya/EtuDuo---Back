@@ -4,7 +4,7 @@ class RoomsController < ApplicationController
   private
 
   def get_params
-    params.require(:room).permit(:name, :password)
+    params.require(:room).permit(:name, :password, :capacity)
   end
 
   def verify_existence
@@ -45,6 +45,9 @@ class RoomsController < ApplicationController
     @room = Room.new(get_params)
     @room.author_id = @user.auth0Id
 
+    if @room.capacity < 1
+      head :bad_request
+    end
     if @room.save
       @user.joined_rooms.append(@room)
       render json: @room
@@ -74,10 +77,12 @@ class RoomsController < ApplicationController
 
   def enter_room
     @room = Room.find(params[:room_id])
-    if @room.password.present? && @room.password != params["password"]
+    if @room.capacity >= @room.users.length
+      render status: :conflict, json: { error: "Room full", description: "Room is already full" }
+    elsif @room.password.present? && @room.password != params["password"]
       head :forbidden
     elsif @room.users.exists?(@user.auth0Id)
-      head :conflict
+      render status: :conflict, json: { error: "Already joined", description: "Room is already joined" }
     else
       @user.joined_rooms.append(@room)
       head :ok
