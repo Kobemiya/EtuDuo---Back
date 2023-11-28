@@ -45,6 +45,13 @@ class TasksController < ApplicationController
 
   public
 
+  def grant(id, user)
+    @user_achievement = UserAchievement.new(user: user, achievement: Achievement.find(id), achieved_date: Date.today)
+    @user_achievement.save
+    if user.achievements.count == 3
+      grant(8, user)
+    end
+  end
   def create
     task = get_params
     return head :bad_request if task[:tags].nil?
@@ -54,9 +61,10 @@ class TasksController < ApplicationController
     if @task.save
       @user.stat.tasks_created += 1
       @user.update(stat: @user.stat)
-      if @user.stat.tasks_created == 10
-        @user_achievement = UserAchievement.new(user: @user, achievement: Achievement.find_by(id: 1), achieved_date: Date.today)
-        @user_achievement.save
+      if @user.stat.tasks_created == 1
+        grant(3, @user)
+      elsif @user.stat.tasks_created == 5
+        grant(4, @user)
       end
       render json: @task
     else
@@ -117,6 +125,11 @@ class TasksController < ApplicationController
     if @task.done != get_params[:done]
       @user.stat.tasks_done += 1
       @user.update(stat: @user.stat)
+      if @user.stat.tasks_done == 1
+        grant(5, @user)
+      elsif @user.stat.tasks_done == 5
+        grant(6, @user)
+      end
     end
     if @task.update(get_params)
       render json: @task

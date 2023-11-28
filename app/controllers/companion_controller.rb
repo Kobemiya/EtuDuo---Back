@@ -12,6 +12,14 @@ class CompanionController < ApplicationController
 
   public
 
+  def grant(id, user)
+    @user_achievement = UserAchievement.new(user: user, achievement: Achievement.find(id), achieved_date: Date.today)
+    @user_achievement.save
+    if user.achievements.count == 3
+      grant(8, user)
+    end
+  end
+
   def index
     @companion = @user.companion
     render json: @companion
@@ -21,6 +29,7 @@ class CompanionController < ApplicationController
     body = params.require(:companion).permit(:name, :skin_color)
     @companion = @user.companion
     if @companion.update(body)
+      grant(7, @user)
       render json: @companion
     else
       head :unprocessable_entity
@@ -33,6 +42,7 @@ class CompanionController < ApplicationController
     return head :conflict if @companion.accessories.where(id: @accessory.id).exists?
     return head :forbidden unless @user.accessories.where(id: @accessory).exists?
     @companion.accessories.append(@accessory)
+    grant(7, @user)
     head :no_content
   rescue ActiveRecord::RecordNotFound => e
     head :not_found
