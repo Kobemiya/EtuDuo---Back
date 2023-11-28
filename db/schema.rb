@@ -23,6 +23,14 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_07_135530) do
     t.index ["name"], name: "index_accessories_on_name", unique: true
   end
 
+  create_table "accessories_companions", id: false, force: :cascade do |t|
+    t.bigint "companion_id"
+    t.bigint "accessory_id"
+    t.index ["accessory_id"], name: "index_accessories_companions_on_accessory_id"
+    t.index ["companion_id", "accessory_id"], name: "index_accessories_companions_on_companion_id_and_accessory_id", unique: true
+    t.index ["companion_id"], name: "index_accessories_companions_on_companion_id"
+  end
+
   create_table "accessories_users", id: false, force: :cascade do |t|
     t.string "user_id"
     t.bigint "accessory_id"
@@ -47,27 +55,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_07_135530) do
   create_table "companions", force: :cascade do |t|
     t.string "name", null: false
     t.string "skin_color", null: false
-    t.bigint "face_id"
-    t.bigint "hands_id"
-    t.bigint "hair_id"
-    t.bigint "neck_id"
-    t.bigint "torso_id"
-    t.bigint "legs_id"
-    t.bigint "feet_id"
     t.string "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "mouth_id"
-    t.bigint "eyes_id"
-    t.index ["eyes_id"], name: "index_companions_on_eyes_id"
-    t.index ["face_id"], name: "index_companions_on_face_id"
-    t.index ["feet_id"], name: "index_companions_on_feet_id"
-    t.index ["hair_id"], name: "index_companions_on_hair_id"
-    t.index ["hands_id"], name: "index_companions_on_hands_id"
-    t.index ["legs_id"], name: "index_companions_on_legs_id"
-    t.index ["mouth_id"], name: "index_companions_on_mouth_id"
-    t.index ["neck_id"], name: "index_companions_on_neck_id"
-    t.index ["torso_id"], name: "index_companions_on_torso_id"
     t.index ["user_id"], name: "index_companions_on_user_id"
   end
 
@@ -160,17 +150,10 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_07_135530) do
     t.index ["auth0Id"], name: "index_users_on_auth0Id", unique: true
   end
 
+  add_foreign_key "accessories_companions", "accessories", on_delete: :cascade
+  add_foreign_key "accessories_companions", "companions", on_delete: :cascade
   add_foreign_key "accessories_users", "accessories", on_delete: :cascade
   add_foreign_key "accessories_users", "users", primary_key: "auth0Id", on_delete: :cascade
-  add_foreign_key "companions", "accessories", column: "eyes_id", on_delete: :nullify
-  add_foreign_key "companions", "accessories", column: "face_id", on_delete: :nullify
-  add_foreign_key "companions", "accessories", column: "feet_id", on_delete: :nullify
-  add_foreign_key "companions", "accessories", column: "hair_id", on_delete: :nullify
-  add_foreign_key "companions", "accessories", column: "hands_id", on_delete: :nullify
-  add_foreign_key "companions", "accessories", column: "legs_id", on_delete: :nullify
-  add_foreign_key "companions", "accessories", column: "mouth_id", on_delete: :nullify
-  add_foreign_key "companions", "accessories", column: "neck_id", on_delete: :nullify
-  add_foreign_key "companions", "accessories", column: "torso_id", on_delete: :nullify
   add_foreign_key "companions", "users", primary_key: "auth0Id", on_delete: :cascade
   add_foreign_key "profiles", "users", primary_key: "auth0Id", on_delete: :cascade
   add_foreign_key "rooms", "users", column: "author_id", primary_key: "auth0Id"
