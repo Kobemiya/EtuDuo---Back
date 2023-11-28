@@ -47,11 +47,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_07_135530) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "achivements", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
   create_table "companions", force: :cascade do |t|
     t.string "name", null: false
     t.string "skin_color", null: false
@@ -84,15 +79,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_07_135530) do
     t.index ["author_id"], name: "index_rooms_on_author_id"
   end
 
-<<<<<<< HEAD
-  create_table "rooms_users", id: false, force: :cascade do |t|
-    t.string "user_id"
-    t.bigint "room_id"
-    t.index ["room_id"], name: "index_rooms_users_on_room_id"
-    t.index ["user_id", "room_id"], name: "index_rooms_users_on_user_id_and_room_id", unique: true
-    t.index ["user_id"], name: "index_rooms_users_on_user_id"
-  end
-
   create_table "stats", force: :cascade do |t|
     t.string "user_id", null: false
     t.integer "tasks_done"
@@ -102,8 +88,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_07_135530) do
     t.index ["user_id"], name: "index_stats_on_user_id"
   end
 
-=======
->>>>>>> dcf63d6 (Removed enter/leave room endpoints and room to user link (removed rooms_users table), with corresponding properties on models)
   create_table "tags", force: :cascade do |t|
     t.string "name", null: false
     t.string "color", null: false
