@@ -15,9 +15,16 @@ class RoomChannel < ApplicationCable::Channel
   end
 
   def broadcast_room_status(room_id)
+    users_connected = {}
+    @@subscribers[room_id].each do |user|
+      users_connected[user.auth0Id] = {
+        username: user.username,
+        companion: user.companion.as_json
+      }
+    end
     ActionCable.server.broadcast "room_#{room_id}", {
       type: "room_status",
-      users_connected: @@subscribers[room_id]
+      users_connected: users_connected
     }
   end
 
@@ -25,14 +32,14 @@ class RoomChannel < ApplicationCable::Channel
     room_id = params[:room_id]
     sleep(0.1)  # absolutely magnificent fix
     @@subscribers[room_id] = [] unless @@subscribers.has_key?(room_id)
-    @@subscribers[room_id].append(user.auth0Id)
+    @@subscribers[room_id].append(user)
     broadcast_room_status(params[:room_id])
   end
 
   def remove_subscriber_and_broadcast
     room_id = params[:room_id]
     return unless @@subscribers[room_id].present?
-    @@subscribers[room_id].delete(connection.user.auth0Id)
+    @@subscribers[room_id].delete(connection.user)
     broadcast_room_status(params[:room_id])
   end
 

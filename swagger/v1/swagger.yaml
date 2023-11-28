@@ -1113,6 +1113,8 @@ components:
           - torso
           - legs
           - feet
+          - mouth
+          - eyes
     companionProperties:
       type: object
       properties:
@@ -1140,6 +1142,12 @@ components:
           type: integer
           nullable: true
         feet_id:
+          type: integer
+          nullable: true
+        eyes_id:
+          type: integer
+          nullable: true
+        mouth_id:
           type: integer
           nullable: true
     roomProperties:
