@@ -7,7 +7,11 @@ class UserController < ApplicationController
     user_params = params.require(:user).permit(:username)
     user_params['auth0Id'] = @token['sub']
     @user = User.new(user_params)
+<<<<<<< HEAD
     @user.stat = Stat.new(user_id: @user.auth0Id, tasks_done: 0, tasks_created: 0)
+=======
+    @user.companion = Companion.new(name: "#{@user.username}'s companion'", skin_color: "#FFFFFF")
+>>>>>>> 14ed2a7 (Impromptu fix for rooms deletion cascading on author, user creation now adds a default companion with it)
     if @user.save
       render json: @user
     else

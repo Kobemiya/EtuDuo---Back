@@ -156,13 +156,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_07_135530) do
   add_foreign_key "accessories_users", "users", primary_key: "auth0Id", on_delete: :cascade
   add_foreign_key "companions", "users", primary_key: "auth0Id", on_delete: :cascade
   add_foreign_key "profiles", "users", primary_key: "auth0Id", on_delete: :cascade
-  add_foreign_key "rooms", "users", column: "author_id", primary_key: "auth0Id"
-<<<<<<< HEAD
-  add_foreign_key "rooms_users", "rooms"
-  add_foreign_key "rooms_users", "users", primary_key: "auth0Id"
+  add_foreign_key "rooms", "users", column: "author_id", primary_key: "auth0Id", on_delete: :cascade
   add_foreign_key "stats", "users", primary_key: "auth0Id", on_delete: :cascade
-=======
->>>>>>> dcf63d6 (Removed enter/leave room endpoints and room to user link (removed rooms_users table), with corresponding properties on models)
   add_foreign_key "tags", "users", primary_key: "auth0Id", on_delete: :cascade
   add_foreign_key "tags_tasks", "tags", on_delete: :cascade
   add_foreign_key "tags_tasks", "tasks", on_delete: :cascade
