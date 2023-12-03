@@ -151,6 +151,180 @@ paths:
           description: Forbidden
         '404':
           description: Not found
+  "/achievements":
+    get:
+      summary: list achievements
+      tags:
+      - Achievements
+      description: List all achievements in the game
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/achievement"
+        '401':
+          description: Unauthorized
+    post:
+      summary: create achievement
+      tags:
+      - Achievements
+      description: Create a new achievement
+      parameters: []
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/achievement"
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '422':
+          description: Unprocessable Entity
+      requestBody:
+        content:
+          application/json:
+            schema:
+              allOf:
+              - "$ref": "#/components/propertiesSchemas/achievementProperties"
+              required:
+              - image_path
+        description: Achievement infos
+  "/achievements/{id}":
+    parameters:
+    - name: id
+      in: path
+      description: id
+      required: true
+      schema:
+        type: integer
+    get:
+      summary: show achievement
+      tags:
+      - Achievements
+      description: Get infos on a specified achievement
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/achievement"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not found
+    patch:
+      summary: update achievement
+      tags:
+      - Achievements
+      description: Update infos of a specified achievement
+      parameters: []
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/achievement"
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not found
+        '422':
+          description: Unprocessable Entity
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/propertiesSchemas/achievementProperties"
+        description: Achievement infos
+    put:
+      summary: update achievement
+      tags:
+      - Achievements
+      description: Update infos of a specified achievement
+      parameters: []
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/achievement"
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not found
+        '422':
+          description: Unprocessable Entity
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/propertiesSchemas/achievementProperties"
+        description: Achievement infos
+    delete:
+      summary: delete achievement
+      tags:
+      - Achievements
+      description: Delete a specified achievement
+      responses:
+        '204':
+          description: Deleted
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not found
+  "/achievements/{achievement_id}/grant":
+    parameters:
+    - name: achievement_id
+      in: path
+      description: id
+      required: true
+      schema:
+        type: integer
+    put:
+      summary: grant achievement
+      tags:
+      - Achievements
+      description: Grant the specified achievement to the user
+      responses:
+        '204':
+          description: Successful
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not found
+        '422':
+          description: Unprocessable Entity
+  user/achievements:
+    get:
+      summary: list user's achievements
+      tags:
+      - Achievements
+      description: List all achievements obtained by the user
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/achievement"
+        '401':
+          description: Unauthorized
   "/companion":
     get:
       summary: show companion
@@ -977,6 +1151,16 @@ components:
       - name
       - password
       - capacity
+    achievement:
+      allOf:
+      - "$ref": "#/components/idSchemas/withId"
+      - "$ref": "#/components/propertiesSchemas/achievementProperties"
+      required:
+      - id
+      - name
+      - description
+      - criteria
+      - image_path
   idSchemas:
     withAuth0Id:
       type: object
@@ -1105,6 +1289,17 @@ components:
           type: string
         capacity:
           type: integer
+    achievementProperties:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        criteria:
+          type: string
+        image_path:
+          type: string
   additionalPropertiesSchemas:
     tagGlobalProperty:
       type: object
