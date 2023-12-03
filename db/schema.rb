@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_12_01_091313) do
+ActiveRecord::Schema[7.0].define(version: 2023_12_02_223020) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -80,15 +80,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_01_091313) do
     t.index ["author_id"], name: "index_rooms_on_author_id"
   end
 
-  create_table "stats", force: :cascade do |t|
-    t.string "user_id", null: false
-    t.integer "tasks_done"
-    t.integer "tasks_created"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["user_id"], name: "index_stats_on_user_id"
-  end
-
   create_table "tags", force: :cascade do |t|
     t.string "name", null: false
     t.string "color", null: false
@@ -142,7 +133,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_01_091313) do
   add_foreign_key "companions", "users", primary_key: "auth0Id", on_delete: :cascade
   add_foreign_key "profiles", "users", primary_key: "auth0Id", on_delete: :cascade
   add_foreign_key "rooms", "users", column: "author_id", primary_key: "auth0Id", on_delete: :cascade
-  add_foreign_key "stats", "users", primary_key: "auth0Id", on_delete: :cascade
   add_foreign_key "tags", "users", primary_key: "auth0Id", on_delete: :cascade
   add_foreign_key "tags_tasks", "tags", on_delete: :cascade
   add_foreign_key "tags_tasks", "tasks", on_delete: :cascade

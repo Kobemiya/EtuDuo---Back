@@ -3,7 +3,7 @@ class AchievementsController < ApplicationController
   before_action :identify!
 
   def get_params
-    params.require(:achievement).permit(:name, :description, :criteria)
+    params.require(:achievement).permit(:name, :description, :criteria, :image_path)
   end
 
   def index
