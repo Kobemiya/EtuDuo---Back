@@ -1182,6 +1182,7 @@ components:
       allOf:
       - "$ref": "#/components/idSchemas/withId"
       - "$ref": "#/components/propertiesSchemas/roomProperties"
+      - "$ref": "#/components/additionalPropertiesSchemas/roomUserCountProperty"
       - "$ref": "#/components/additionalPropertiesSchemas/roomNeedsPasswordProperty"
       required:
       - id
@@ -1356,6 +1357,11 @@ components:
         password:
           type: string
           nullable: true
+    roomUserCountProperty:
+      type: object
+      properties:
+        user_count:
+          type: integer
     roomNeedsPasswordProperty:
       type: object
       properties:
