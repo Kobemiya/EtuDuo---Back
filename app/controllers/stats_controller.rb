@@ -8,6 +8,11 @@ class StatsController < ApplicationController
 
   def user_stats
     @stat = @user.stat
-    render json: @stat
+    @res = {
+      id: @stat.id,
+      tasks_done: @stat.tasks_done,
+      tasks_created: @stat.tasks_created
+    }
+    render json: @res
   end
 end

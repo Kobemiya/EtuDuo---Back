@@ -77,6 +77,13 @@ RSpec.configure do |config|
             ],
             required: %w[id name skin_color]
           },
+          stat: {
+            allOf: [
+              { '$ref' => '#/components/idSchemas/withId' },
+              { '$ref' => '#/components/propertiesSchemas/statProperties' }
+            ],
+            required: %w[id tasks_done tasks_created]
+          },
           room: {
             allOf: [
               { '$ref' => '#/components/idSchemas/withId' },
@@ -161,6 +168,13 @@ RSpec.configure do |config|
             properties: {
               name: { type: 'string' },
               skin_color: { type: 'string', pattern: '#[A-Za-z0-9]{6}' }
+            }
+          },
+          statProperties: {
+            type: 'object',
+            properties: {
+              tasks_done: { type: 'integer' },
+              tasks_created: { type: 'integer' }
             }
           },
           roomProperties: {
