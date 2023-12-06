@@ -322,7 +322,7 @@ paths:
           description: Not found
         '422':
           description: Unprocessable Entity
-  user/achievements:
+  "/user/achievements":
     get:
       summary: list user's achievements
       tags:
