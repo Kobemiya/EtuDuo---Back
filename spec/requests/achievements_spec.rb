@@ -128,7 +128,7 @@ RSpec.describe "achievements", type: :request do
     end
   end
 
-  path 'user/achievements' do
+  path '/user/achievements' do
     get('list user\'s achievements') do
       tags 'Achievements'
       produces 'application/json'
