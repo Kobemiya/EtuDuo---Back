@@ -8,4 +8,5 @@ class User < ApplicationRecord
   has_many :created_rooms, class_name: 'Room', primary_key: :auth0Id, foreign_key: :author_id
   has_many :user_achievements, class_name: 'UserAchievement'
   has_many :achievements, through: :user_achievements
+  has_one :stat, primary_key: :auth0Id, foreign_key: :user_id
 end

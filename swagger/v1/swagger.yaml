@@ -654,6 +654,21 @@ paths:
           description: Forbidden
         '404':
           description: Not Found
+  "/stats":
+    get:
+      summary: List stats
+      tags:
+      - Stats
+      description: List all stats of a user
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/stat"
+        '401':
+          description: Unauthorized
   "/tasks/tags":
     get:
       summary: List tags
@@ -1155,6 +1170,14 @@ components:
       - id
       - name
       - skin_color
+    stat:
+      allOf:
+      - "$ref": "#/components/idSchemas/withId"
+      - "$ref": "#/components/propertiesSchemas/statProperties"
+      required:
+      - id
+      - tasks_done
+      - tasks_created
     room:
       allOf:
       - "$ref": "#/components/idSchemas/withId"
@@ -1296,6 +1319,13 @@ components:
         skin_color:
           type: string
           pattern: "#[A-Za-z0-9]{6}"
+    statProperties:
+      type: object
+      properties:
+        tasks_done:
+          type: integer
+        tasks_created:
+          type: integer
     roomProperties:
       type: object
       properties:
