@@ -308,6 +308,20 @@ paths:
           description: Not found
         '422':
           description: Unprocessable Entity
+    post:
+      summary: grant achievement
+      tags:
+      - Achievements
+      description: Grant the specified achievement to the user
+      responses:
+        '204':
+          description: Successful
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not found
+        '422':
+          description: Unprocessable Entity
   user/achievements:
     get:
       summary: list user's achievements

@@ -34,5 +34,6 @@ Rails.application.routes.draw do
   resources :achievements
 
   put '/achievements/:id/grant', to: "achievements#grant"
+  post '/achievements/:id/grant', to: "achievements#grant"
   get '/user/achievements', to: "achievements#user_achievements"
 end

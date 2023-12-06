@@ -115,6 +115,17 @@ RSpec.describe "achievements", type: :request do
       response(404, 'Not found') do run_test! end
       response(422, 'Unprocessable Entity') do run_test! end
     end
+
+    post('grant achievement') do
+      tags 'Achievements'
+      produces 'application/json'
+      description 'Grant the specified achievement to the user'
+
+      response(204, 'Successful') do run_test! end
+      response(401, 'Unauthorized') do run_test! end
+      response(404, 'Not found') do run_test! end
+      response(422, 'Unprocessable Entity') do run_test! end
+    end
   end
 
   path 'user/achievements' do
