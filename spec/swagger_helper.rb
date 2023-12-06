@@ -88,7 +88,6 @@ RSpec.configure do |config|
             allOf: [
               { '$ref' => '#/components/idSchemas/withId' },
               { '$ref' => '#/components/propertiesSchemas/roomProperties' },
-              { '$ref' => '#/components/additionalPropertiesSchemas/roomUserCountProperty' },
               { '$ref' => '#/components/additionalPropertiesSchemas/roomNeedsPasswordProperty' }
             ],
             required: %w[id name password capacity]
@@ -161,7 +160,7 @@ RSpec.configure do |config|
             properties: {
               name: { type: 'string' },
               image_path: { type: 'string', pattern: '(/[a-z0-9_])+' },
-              body_part: { type: 'string', enum: %w[hair hands face neck torso legs feet] }
+              body_part: { type: 'string', enum: %w[hair hands face neck torso legs feet mouth eyes] }
             }
           },
           companionProperties: {
@@ -206,12 +205,6 @@ RSpec.configure do |config|
             type: 'object',
             properties: {
               password: { type: 'string', nullable: true }
-            }
-          },
-          roomUserCountProperty: {
-            type: 'object',
-            properties: {
-              user_count: { type: 'integer' }
             }
           },
           roomNeedsPasswordProperty: {
