@@ -84,6 +84,13 @@ RSpec.configure do |config|
               { '$ref' => '#/components/additionalPropertiesSchemas/roomNeedsPasswordProperty' }
             ],
             required: %w[id name password capacity]
+          },
+          achievement: {
+            allOf: [
+              { '$ref' => '#/components/idSchemas/withId' },
+              { '$ref' => '#/components/propertiesSchemas/achievementProperties' }
+            ],
+            required: %w[id name description criteria image_path]
           }
         },
         idSchemas: {
@@ -161,6 +168,15 @@ RSpec.configure do |config|
             properties: {
               name: { type: 'string' },
               capacity: { type: 'integer' }
+            }
+          },
+          achievementProperties: {
+            type: 'object',
+            properties: {
+              name: { type: 'string' },
+              description: { type: 'string' },
+              criteria: { type: 'string' },
+              image_path: { type: 'string' }
             }
           }
         },

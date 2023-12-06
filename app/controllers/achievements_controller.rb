@@ -3,12 +3,18 @@ class AchievementsController < ApplicationController
   before_action :identify!
 
   def get_params
-    params.require(:achievement).permit(:name, :description, :criteria)
+    params.require(:achievement).permit(:name, :description, :criteria, :image_path)
   end
+
+  # TODO add needs perms on create, update and delete
+  # TODO fix and add status returns
+  # TODO add achievement removal
+  # TODO specify format for path
 
   def index
     render json: Achievement.all
   end
+
   def create
     @achievement = Achievement.new(get_params)
     if @achievement.save
